@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firm Profiles - LSCA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --lsca-green: #4CAF50;
+            --lsca-green-dark: #2D3E2F;
+            --lsca-green-light: #E8F5E9;
+            --grade-a: #22c55e;
+            --grade-b: #84cc16;
+            --grade-c: #eab308;
+            --grade-d: #f97316;
+            --grade-f: #ef4444;
+            --text-dark: #1f2937;
+            --text-muted: #6b7280;
+            --border: #e5e7eb;
+            --bg-light: #f9fafb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text-dark);
+            background: #fff;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .site-header {
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            height: 50px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--lsca-green-dark);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-links a:hover {
+            color: var(--lsca-green);
+        }
+
+        .nav-links a.active {
+            color: var(--lsca-green);
+            border-bottom: 2px solid var(--lsca-green);
+            padding-bottom: 2px;
+        }
+
+        /* Page Title */
+        .page-title {
+            background: var(--lsca-green-light);
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .page-title h1 {
+            font-size: 2.5rem;
+            color: var(--lsca-green-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-title h1 em {
+            font-style: italic;
+            font-weight: 400;
+        }
+
+        .page-title p {
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Search Section */
+        .search-section {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 1rem;
+            max-width: 600px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 0.875rem 1.25rem;
+            font-size: 1rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--lsca-green);
+        }
+
+        .search-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        /* Main Layout */
+        .main-layout {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem 4rem;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 2rem;
+        }
+
+        /* Filter Sidebar */
+        .filter-sidebar {
+            background: var(--bg-light);
+            border-radius: 12px;
+            padding: 1.5rem;
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+
+        .filter-title {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .filter-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-group-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 0.75rem;
+            color: var(--lsca-green-dark);
+        }
+
+        .filter-option {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.375rem 0;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .filter-option input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--lsca-green);
+        }
+
+        .filter-option .grade-indicator {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 0.75rem;
+            color: #fff;
+        }
+
+        .filter-placeholder {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-style: italic;
+            padding: 0.5rem;
+            background: #fff;
+            border-radius: 6px;
+            border: 1px dashed var(--border);
+        }
+
+        /* Grade Buckets */
+        .grade-bucket {
+            margin-bottom: 3rem;
+        }
+
+        .grade-bucket.hidden {
+            display: none;
+        }
+
+        .bucket-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid var(--border);
+        }
+
+        .bucket-grade {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 2rem;
+            color: #fff;
+        }
+
+        .bucket-info h2 {
+            font-size: 1.25rem;
+            color: var(--lsca-green-dark);
+            margin-bottom: 0.125rem;
+        }
+
+        .bucket-info p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .bucket-count {
+            margin-left: auto;
+            background: var(--bg-light);
+            padding: 0.5rem 1rem;
+            border-radius: 100px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* Grade-specific bucket styling */
+        .grade-bucket[data-grade="A"] .bucket-header { border-bottom-color: var(--grade-a); }
+        .grade-bucket[data-grade="B"] .bucket-header { border-bottom-color: var(--grade-b); }
+        .grade-bucket[data-grade="C"] .bucket-header { border-bottom-color: var(--grade-c); }
+        .grade-bucket[data-grade="D"] .bucket-header { border-bottom-color: var(--grade-d); }
+        .grade-bucket[data-grade="F"] .bucket-header { border-bottom-color: var(--grade-f); }
+
+        /* Firm Cards Grid */
+        .firms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .firm-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            transition: all 0.2s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .firm-card:hover {
+            border-color: var(--lsca-green);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .firm-card.hidden {
+            display: none;
+        }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .vault-rank {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            background: var(--bg-light);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+        }
+
+        .compare-checkbox {
+            opacity: 0.4;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .firm-card:hover .compare-checkbox {
+            opacity: 1;
+        }
+
+        .compare-checkbox input {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--lsca-green);
+        }
+
+        .logo-placeholder {
+            width: 100%;
+            height: 80px;
+            background: var(--bg-light);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            border: 1px dashed var(--border);
+        }
+
+        .logo-placeholder span {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .firm-name {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--lsca-green-dark);
+            text-align: center;
+            margin-bottom: 1rem;
+            min-height: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.3;
+        }
+
+        .card-grades {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+        .overall-grade {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: #fff;
+        }
+
+        .sub-grades {
+            display: flex;
+            gap: 0.375rem;
+        }
+
+        .sub-grade {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.125rem;
+        }
+
+        .sub-grade-icon {
+            font-size: 0.75rem;
+            opacity: 0.7;
+        }
+
+        .sub-grade-value {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 0.7rem;
+            color: #fff;
+        }
+
+        /* No Results */
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-muted);
+        }
+
+        .no-results h3 {
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        /* Footer */
+        .site-footer {
+            background: var(--lsca-green-dark);
+            color: #fff;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .footer-logo {
+            height: 40px;
+            filter: brightness(0) invert(1);
+            margin-bottom: 1rem;
+        }
+
+        .footer-text {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-sidebar {
+                position: static;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .page-title h1 {
+                font-size: 1.75rem;
+            }
+
+            .firms-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Firm Logo */
+        .firm-logo {
+            max-width: 100%;
+            max-height: 70px;
+            object-fit: contain;
+        }
+
+        .logo-placeholder.has-logo {
+            border: none;
+            background: #fff;
+        }
+
+        /* Compare Bar */
+        .compare-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--lsca-green-dark);
+            color: #fff;
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            z-index: 200;
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .compare-bar.visible {
+            transform: translateY(0);
+        }
+
+        .compare-bar-content {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .compare-count {
+            font-weight: 600;
+        }
+
+        .selected-firms {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .selected-firm-tag {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.25rem 0.75rem;
+            border-radius: 100px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .selected-firm-tag .remove {
+            cursor: pointer;
+            opacity: 0.7;
+            font-size: 1rem;
+            line-height: 1;
+        }
+
+        .selected-firm-tag .remove:hover {
+            opacity: 1;
+        }
+
+        .compare-bar-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .compare-btn {
+            background: var(--lsca-green);
+            color: #fff;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .compare-btn:hover {
+            background: #3d9140;
+        }
+
+        .clear-btn {
+            background: transparent;
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        .clear-btn:hover {
+            border-color: #fff;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 300;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+            padding: 2rem;
+        }
+
+        .modal-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: #fff;
+            border-radius: 16px;
+            max-width: 1000px;
+            width: 100%;
+            max-height: 90vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transform: scale(0.95);
+            transition: transform 0.3s;
+        }
+
+        .modal-overlay.visible .modal {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-header h2 {
+            font-size: 1.5rem;
+            color: var(--lsca-green-dark);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            padding: 0.5rem;
+            line-height: 1;
+        }
+
+        .modal-close:hover {
+            color: var(--text-dark);
+        }
+
+        .modal-body {
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        /* Comparison Table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 1rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .comparison-table th {
+            background: var(--bg-light);
+            font-weight: 600;
+            color: var(--lsca-green-dark);
+        }
+
+        .comparison-table th:first-child,
+        .comparison-table td:first-child {
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-muted);
+            background: var(--bg-light);
+            position: sticky;
+            left: 0;
+        }
+
+        .comparison-table .firm-header {
+            vertical-align: bottom;
+        }
+
+        .comparison-table .firm-header-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .comparison-table .firm-header-logo {
+            height: 40px;
+            width: auto;
+            max-width: 120px;
+            object-fit: contain;
+        }
+
+        .comparison-table .firm-header-name {
+            font-size: 0.9rem;
+            line-height: 1.3;
+        }
+
+        .comparison-table .firm-header-rank {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .comparison-table .grade-cell {
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        .comparison-table .metric-row td {
+            font-size: 0.95rem;
+        }
+
+        .comparison-table .section-header td {
+            background: var(--lsca-green-light);
+            font-weight: 600;
+            color: var(--lsca-green-dark);
+            text-align: left;
+            padding: 0.75rem 1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="site-header">
+        <div class="header-content">
+            <img src="https://images.squarespace-cdn.com/content/v1/646e3b899493ae261720e957/c97bb057-7d9d-4a29-b019-9dd824be333c/logo.png" alt="Law Students for Climate Accountability" class="logo">
+            <nav class="nav-links">
+                <a href="#">Scorecard</a>
+                <a href="#" class="active">Profiles</a>
+                <a href="#">Take Action</a>
+                <a href="#">About</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Page Title -->
+    <section class="page-title">
+        <h1><em>The</em> FIRM CLIMATE PROFILES</h1>
+        <p>Explore how the Vault 100 law firms are shaping the climate crisis. Find firms aligned with your values.</p>
+    </section>
+
+    <!-- Search Section -->
+    <section class="search-section">
+        <div class="search-bar">
+            <input type="text" class="search-input" id="firmSearch" placeholder="Search firms by name...">
+        </div>
+    </section>
+
+    <!-- Main Layout -->
+    <main class="main-layout">
+        <!-- Filter Sidebar -->
+        <aside class="filter-sidebar">
+            <h3 class="filter-title">Filter Firms</h3>
+            
+            <div class="filter-group">
+                <div class="filter-group-title">Climate Grade</div>
+                <label class="filter-option">
+                    <input type="checkbox" class="grade-filter" value="A" checked>
+                    <span class="grade-indicator" style="background: var(--grade-a);">A</span>
+                    A-Grade
+                </label>
+                <label class="filter-option">
+                    <input type="checkbox" class="grade-filter" value="B" checked>
+                    <span class="grade-indicator" style="background: var(--grade-b);">B</span>
+                    B-Grade
+                </label>
+                <label class="filter-option">
+                    <input type="checkbox" class="grade-filter" value="C" checked>
+                    <span class="grade-indicator" style="background: var(--grade-c);">C</span>
+                    C-Grade
+                </label>
+                <label class="filter-option">
+                    <input type="checkbox" class="grade-filter" value="D" checked>
+                    <span class="grade-indicator" style="background: var(--grade-d);">D</span>
+                    D-Grade
+                </label>
+                <label class="filter-option">
+                    <input type="checkbox" class="grade-filter" value="F" checked>
+                    <span class="grade-indicator" style="background: var(--grade-f);">F</span>
+                    F-Grade
+                </label>
+            </div>
+
+            <div class="filter-group">
+                <div class="filter-group-title">Office Location</div>
+                <div class="filter-placeholder">Coming soon</div>
+            </div>
+
+            <div class="filter-group">
+                <div class="filter-group-title">Practice Areas</div>
+                <div class="filter-placeholder">Coming soon</div>
+            </div>
+
+            <div class="filter-group">
+                <div class="filter-group-title">Engagement Status</div>
+                <div class="filter-placeholder">Coming soon</div>
+            </div>
+        </aside>
+
+        <!-- Firms Grid by Grade -->
+        <div class="firms-container">
+            <!-- A-Grade Bucket -->
+            <section class="grade-bucket" data-grade="A">
+                <div class="bucket-header">
+                    <div class="bucket-grade" style="background: var(--grade-a);">A</div>
+                    <div class="bucket-info">
+                        <h2>A-Grade Firms</h2>
+                        <p>Climate leaders with minimal fossil fuel involvement</p>
+                    </div>
+                    <span class="bucket-count"><span class="count">13</span> firms</span>
+                </div>
+                <div class="firms-grid" id="grade-a-grid">
+                    <!-- Cards populated by JS -->
+                </div>
+            </section>
+
+            <!-- B-Grade Bucket -->
+            <section class="grade-bucket" data-grade="B">
+                <div class="bucket-header">
+                    <div class="bucket-grade" style="background: var(--grade-b);">B</div>
+                    <div class="bucket-info">
+                        <h2>B-Grade Firms</h2>
+                        <p>Above average climate performance</p>
+                    </div>
+                    <span class="bucket-count"><span class="count">6</span> firms</span>
+                </div>
+                <div class="firms-grid" id="grade-b-grid">
+                    <!-- Cards populated by JS -->
+                </div>
+            </section>
+
+            <!-- C-Grade Bucket -->
+            <section class="grade-bucket" data-grade="C">
+                <div class="bucket-header">
+                    <div class="bucket-grade" style="background: var(--grade-c);">C</div>
+                    <div class="bucket-info">
+                        <h2>C-Grade Firms</h2>
+                        <p>Mixed climate record</p>
+                    </div>
+                    <span class="bucket-count"><span class="count">8</span> firms</span>
+                </div>
+                <div class="firms-grid" id="grade-c-grid">
+                    <!-- Cards populated by JS -->
+                </div>
+            </section>
+
+            <!-- D-Grade Bucket -->
+            <section class="grade-bucket" data-grade="D">
+                <div class="bucket-header">
+                    <div class="bucket-grade" style="background: var(--grade-d);">D</div>
+                    <div class="bucket-info">
+                        <h2>D-Grade Firms</h2>
+                        <p>Below average climate performance</p>
+                    </div>
+                    <span class="bucket-count"><span class="count">35</span> firms</span>
+                </div>
+                <div class="firms-grid" id="grade-d-grid">
+                    <!-- Cards populated by JS -->
+                </div>
+            </section>
+
+            <!-- F-Grade Bucket -->
+            <section class="grade-bucket" data-grade="F">
+                <div class="bucket-header">
+                    <div class="bucket-grade" style="background: var(--grade-f);">F</div>
+                    <div class="bucket-info">
+                        <h2>F-Grade Firms</h2>
+                        <p>Significant fossil fuel involvement</p>
+                    </div>
+                    <span class="bucket-count"><span class="count">38</span> firms</span>
+                </div>
+                <div class="firms-grid" id="grade-f-grid">
+                    <!-- Cards populated by JS -->
+                </div>
+            </section>
+
+            <!-- No Results Message -->
+            <div class="no-results" id="noResults" style="display: none;">
+                <h3>No firms found</h3>
+                <p>Try adjusting your search or filters.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Compare Bar -->
+    <div class="compare-bar" id="compareBar">
+        <div class="compare-bar-content">
+            <span class="compare-count"><span id="compareCount">0</span>/4 firms selected</span>
+            <div class="selected-firms" id="selectedFirms"></div>
+        </div>
+        <div class="compare-bar-actions">
+            <button class="clear-btn" id="clearCompare">Clear All</button>
+            <button class="compare-btn" id="openCompare">Compare Firms</button>
+        </div>
+    </div>
+
+    <!-- Comparison Modal -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Firm Comparison</h2>
+                <button class="modal-close" id="modalClose">×</button>
+            </div>
+            <div class="modal-body">
+                <table class="comparison-table" id="comparisonTable">
+                    <!-- Populated by JS -->
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <img src="https://images.squarespace-cdn.com/content/v1/646e3b899493ae261720e957/90bf33a1-f881-4bde-b7eb-3cb81575ece0/white+logo.png" alt="LSCA" class="footer-logo">
+        <p class="footer-text">Law Students for Climate Accountability is a fiscally sponsored project of Earth Island Institute, a 501(c)(3) nonprofit organization.</p>
+    </footer>
+
+    <script>
+        // Firm data
+        const firms = [
+            { name: "Akerman", rank: 100, grade: "A", transaction: "A", litigation: "B", lobbying: "A", logo: null },
+            { name: "Arnold & Porter Kaye Scholer", rank: 33, grade: "F", transaction: "B", litigation: "F", lobbying: "C", logo: null },
+            { name: "Boies Schiller Flexner", rank: 56, grade: "B", transaction: "B", litigation: "B", lobbying: "B", logo: null },
+            { name: "Cozen O'Connor", rank: 91, grade: "D", transaction: "B", litigation: "A", lobbying: "D", logo: null },
+            { name: "Crowell & Moring", rank: 65, grade: "F", transaction: "A", litigation: "F", lobbying: "A", logo: null },
+            { name: "Davis Wright Tremaine", rank: 78, grade: "A", transaction: "B", litigation: "B", lobbying: "B", logo: null },
+            { name: "Dechert", rank: 50, grade: "A", transaction: "B", litigation: "B", lobbying: "B", logo: null },
+            { name: "Faegre Drinker", rank: 93, grade: "D", transaction: "A", litigation: "B", lobbying: "D", logo: null },
+            { name: "Fenwick & West", rank: 70, grade: "A", transaction: "B", litigation: "B", lobbying: "B", logo: null },
+            { name: "Fish & Richardson", rank: 82, grade: "A", transaction: "B", litigation: "B", lobbying: "B", logo: null },
+            { name: "Foley Hoag", rank: 98, grade: "A", transaction: "A", litigation: "A", lobbying: "A", logo: null },
+            { name: "Gunderson Dettmer", rank: 85, grade: "A", transaction: "B", litigation: "B", lobbying: "B", logo: null },
+            { name: "Irell & Manella", rank: 84, grade: "B", transaction: "B", litigation: "B", lobbying: "B", logo: null },
+            { name: "Jenner & Block", rank: 63, grade: "C", transaction: "B", litigation: "C", lobbying: "C", logo: null },
+            { name: "Kellogg, Hansen, Todd, Figel & Frederick", rank: 81, grade: "F", transaction: "B", litigation: "F", lobbying: "B", logo: null },
+            { name: "Kilpatrick Townsend & Stockton", rank: 99, grade: "C", transaction: "B", litigation: "B", lobbying: "C", logo: null },
+            { name: "Mintz Levin", rank: 74, grade: "A", transaction: "B", litigation: "B", lobbying: "B", logo: null },
+            { name: "Munger, Tolles & Olson", rank: 43, grade: "F", transaction: "B", litigation: "F", lobbying: "B", logo: null },
+            { name: "Polsinelli", rank: 89, grade: "A", transaction: "A", litigation: "B", lobbying: "B", logo: null },
+            { name: "Proskauer Rose", rank: 30, grade: "A", transaction: "B", litigation: "B", lobbying: "B", logo: null },
+            { name: "Quinn Emanuel Urquhart & Sullivan", rank: 12, grade: "D", transaction: "B", litigation: "D", lobbying: "B", logo: null },
+            { name: "Schulte Roth & Zabel", rank: 88, grade: "A", transaction: "B", litigation: "B", lobbying: "B", logo: null },
+            { name: "Susman Godfrey", rank: 28, grade: "F", transaction: "B", litigation: "F", lobbying: "B", logo: null },
+            { name: "Venable", rank: 67, grade: "F", transaction: "B", litigation: "F", lobbying: "D", logo: null },
+            { name: "Williams & Connolly", rank: 19, grade: "D", transaction: "B", litigation: "D", lobbying: "B", logo: null },
+            { name: "Arent Fox", rank: 79, grade: "D", transaction: "B", litigation: "B", lobbying: "D", logo: null },
+            { name: "Bryan Cave Leighton Paisner", rank: 94, grade: "B", transaction: "A", litigation: "B", lobbying: "B", logo: null },
+            { name: "Cadwalader, Wickersham & Taft", rank: 53, grade: "B", transaction: "B", litigation: "B", lobbying: "B", logo: null },
+            { name: "Cooley", rank: 24, grade: "A", transaction: "A", litigation: "B", lobbying: "B", logo: "https://cdn.cookielaw.org/logos/5933c992-70de-4529-bbe4-2823cdc10b72/e25d1509-fd8f-458f-8982-7f7ac1752405/6681d431-78de-4b3c-b246-6712d6d77bb5/cooley-logo-red-web.png" },
+            { name: "Duane Morris", rank: 97, grade: "D", transaction: "B", litigation: "D", lobbying: "D", logo: null },
+            { name: "Fox Rothschild", rank: 75, grade: "B", transaction: "B", litigation: "B", lobbying: "B", logo: null },
+            { name: "Ropes & Gray", rank: 20, grade: "A", transaction: "A", litigation: "B", lobbying: "B", logo: "https://www.ropesgray.com/-/media/images/ropesgrayllplogo-3.svg?h=66&iar=0&w=257&hash=0E44F85D345AD2CD435AA78B221B1833" },
+            { name: "Seyfarth Shaw", rank: 86, grade: "B", transaction: "B", litigation: "B", lobbying: "B", logo: null },
+            { name: "Sheppard, Mullin, Richter & Hampton", rank: 69, grade: "C", transaction: "A", litigation: "C", lobbying: "B", logo: null },
+            { name: "Alston & Bird", rank: 58, grade: "D", transaction: "C", litigation: "D", lobbying: "D", logo: null },
+            { name: "BakerHostetler", rank: 64, grade: "D", transaction: "C", litigation: "D", lobbying: "D", logo: null },
+            { name: "Ballard Spahr", rank: 92, grade: "C", transaction: "C", litigation: "C", lobbying: "A", logo: null },
+            { name: "Foley & Lardner", rank: 68, grade: "D", transaction: "C", litigation: "B", lobbying: "D", logo: null },
+            { name: "Katten Muchin Rosenman", rank: 77, grade: "C", transaction: "C", litigation: "B", lobbying: "B", logo: null },
+            { name: "Kramer Levin Naftalis & Frankel", rank: 90, grade: "C", transaction: "C", litigation: "B", lobbying: "B", logo: null },
+            { name: "Nixon Peabody", rank: 72, grade: "D", transaction: "C", litigation: "D", lobbying: "B", logo: null },
+            { name: "WilmerHale", rank: 26, grade: "D", transaction: "C", litigation: "D", lobbying: "D", logo: null },
+            { name: "Wilson Sonsini Goodrich & Rosati", rank: 36, grade: "C", transaction: "C", litigation: "B", lobbying: "B", logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYqjPvZsCjfvgK5--YJDigx5qO9pXKh1W7zg&s" },
+            { name: "Blank Rome", rank: 96, grade: "D", transaction: "C", litigation: "C", lobbying: "D", logo: null },
+            { name: "Fried, Frank, Harris, Shriver & Jacobson", rank: 46, grade: "D", transaction: "D", litigation: "B", lobbying: "B", logo: null },
+            { name: "Goodwin Procter", rank: 32, grade: "F", transaction: "C", litigation: "F", lobbying: "B", logo: null },
+            { name: "McDermott Will & Emery", rank: 45, grade: "C", transaction: "C", litigation: "C", lobbying: "B", logo: null },
+            { name: "Steptoe & Johnson", rank: 73, grade: "D", transaction: "C", litigation: "D", lobbying: "D", logo: null },
+            { name: "Morrison & Foerster", rank: 22, grade: "D", transaction: "D", litigation: "B", lobbying: "B", logo: null },
+            { name: "Perkins Coie", rank: 31, grade: "D", transaction: "D", litigation: "D", lobbying: "D", logo: null },
+            { name: "Pillsbury Winthrop Shaw Pittman", rank: 60, grade: "D", transaction: "C", litigation: "D", lobbying: "D", logo: null },
+            { name: "Cahill Gordon & Reindel", rank: 66, grade: "D", transaction: "D", litigation: "B", lobbying: "B", logo: null },
+            { name: "Covington & Burling", rank: 15, grade: "F", transaction: "D", litigation: "F", lobbying: "D", logo: null },
+            { name: "Debevoise & Plimpton", rank: 21, grade: "D", transaction: "D", litigation: "B", lobbying: "B", logo: null },
+            { name: "K & L Gates", rank: 49, grade: "F", transaction: "D", litigation: "F", lobbying: "F", logo: null },
+            { name: "Reed Smith", rank: 62, grade: "D", transaction: "D", litigation: "D", lobbying: "B", logo: null },
+            { name: "Greenberg Traurig", rank: 54, grade: "F", transaction: "D", litigation: "F", lobbying: "D", logo: null },
+            { name: "Cravath, Swaine & Moore", rank: 1, grade: "D", transaction: "D", litigation: "D", lobbying: "B", logo: null },
+            { name: "O'Melveny & Myers", rank: 25, grade: "F", transaction: "D", litigation: "F", lobbying: "B", logo: null },
+            { name: "Squire Patton Boggs", rank: 76, grade: "F", transaction: "D", litigation: "F", lobbying: "D", logo: null },
+            { name: "McGuireWoods", rank: 71, grade: "F", transaction: "D", litigation: "F", lobbying: "D", logo: null },
+            { name: "Willkie Farr & Gallagher", rank: 35, grade: "D", transaction: "D", litigation: "B", lobbying: "B", logo: null },
+            { name: "Haynes and Boone", rank: 87, grade: "D", transaction: "D", litigation: "D", lobbying: "B", logo: null },
+            { name: "Troutman Pepper Hamilton Sanders", rank: 80, grade: "D", transaction: "D", litigation: "D", lobbying: "A", logo: null },
+            { name: "Wachtell, Lipton, Rosen & Katz", rank: 2, grade: "D", transaction: "D", litigation: "D", lobbying: "B", logo: null },
+            { name: "Holland & Knight", rank: 48, grade: "F", transaction: "D", litigation: "F", lobbying: "F", logo: null },
+            { name: "Locke Lord", rank: 83, grade: "D", transaction: "D", litigation: "B", lobbying: "B", logo: null },
+            { name: "Winston & Strawn", rank: 38, grade: "D", transaction: "D", litigation: "C", lobbying: "B", logo: null },
+            { name: "Paul Weiss Rifkind Wharton & Garrison", rank: 8, grade: "F", transaction: "D", litigation: "F", lobbying: "B", logo: null },
+            { name: "Weil, Gotshal & Manges", rank: 14, grade: "D", transaction: "D", litigation: "D", lobbying: "B", logo: null },
+            { name: "Hogan Lovells", rank: 27, grade: "F", transaction: "D", litigation: "F", lobbying: "D", logo: null },
+            { name: "Dentons", rank: 61, grade: "D", transaction: "D", litigation: "C", lobbying: "D", logo: null },
+            { name: "Jones Day", rank: 23, grade: "F", transaction: "D", litigation: "F", lobbying: "B", logo: null },
+            { name: "Orrick, Herrington & Sutcliffe", rank: 40, grade: "F", transaction: "D", litigation: "F", lobbying: "B", logo: null },
+            { name: "Morgan, Lewis & Bockius", rank: 34, grade: "F", transaction: "D", litigation: "F", lobbying: "B", logo: null },
+            { name: "Cleary Gottlieb Steen & Hamilton", rank: 16, grade: "D", transaction: "D", litigation: "C", lobbying: "B", logo: null },
+            { name: "Sullivan & Cromwell", rank: 5, grade: "D", transaction: "D", litigation: "D", lobbying: "B", logo: null },
+            { name: "King & Spalding", rank: 37, grade: "F", transaction: "D", litigation: "F", lobbying: "C", logo: null },
+            { name: "DLA Piper", rank: 39, grade: "D", transaction: "D", litigation: "C", lobbying: "D", logo: null },
+            { name: "Mayer Brown", rank: 44, grade: "D", transaction: "D", litigation: "D", lobbying: "D", logo: null },
+            { name: "Paul Hastings", rank: 18, grade: "D", transaction: "D", litigation: "D", lobbying: "B", logo: null },
+            { name: "Baker McKenzie", rank: 41, grade: "D", transaction: "D", litigation: "B", lobbying: "B", logo: null },
+            { name: "Freshfields Bruckhaus Deringer", rank: 57, grade: "F", transaction: "F", litigation: "B", lobbying: "B", logo: null },
+            { name: "Akin Gump Strauss Hauer & Feld", rank: 29, grade: "F", transaction: "F", litigation: "B", lobbying: "F", logo: null },
+            { name: "Davis Polk & Wardwell", rank: 7, grade: "F", transaction: "F", litigation: "B", lobbying: "B", logo: null },
+            { name: "Baker Botts", rank: 51, grade: "F", transaction: "F", litigation: "F", lobbying: "B", logo: null },
+            { name: "Skadden, Arps, Slate, Meagher & Flom", rank: 3, grade: "F", transaction: "F", litigation: "B", lobbying: "B", logo: null },
+            { name: "Sidley Austin", rank: 11, grade: "F", transaction: "F", litigation: "F", lobbying: "A", logo: null },
+            { name: "Gibson, Dunn & Crutcher", rank: 10, grade: "F", transaction: "F", litigation: "F", lobbying: "C", logo: null },
+            { name: "Hunton Andrews Kurth", rank: 95, grade: "F", transaction: "F", litigation: "F", lobbying: "F", logo: null },
+            { name: "Norton Rose Fulbright", rank: 59, grade: "F", transaction: "F", litigation: "D", lobbying: "C", logo: null },
+            { name: "Clifford Chance", rank: 42, grade: "F", transaction: "F", litigation: "B", lobbying: "B", logo: null },
+            { name: "Simpson Thacher & Bartlett", rank: 9, grade: "F", transaction: "F", litigation: "B", lobbying: "B", logo: null },
+            { name: "Linklaters", rank: 51, grade: "F", transaction: "F", litigation: "B", lobbying: "B", logo: null },
+            { name: "Milbank", rank: 13, grade: "F", transaction: "F", litigation: "B", lobbying: "B", logo: null },
+            { name: "A&O Shearman", rank: 47, grade: "F", transaction: "F", litigation: "B", lobbying: "B", logo: null },
+            { name: "White & Case", rank: 17, grade: "F", transaction: "F", litigation: "D", lobbying: "B", logo: null },
+            { name: "Kirkland & Ellis", rank: 6, grade: "F", transaction: "F", litigation: "D", lobbying: "B", logo: null },
+            { name: "Vinson & Elkins", rank: 55, grade: "F", transaction: "F", litigation: "F", lobbying: "C", logo: null },
+            { name: "Latham & Watkins", rank: 4, grade: "F", transaction: "F", litigation: "F", lobbying: "B", logo: "https://www.lw.com/assets/images/logo/logo-lathamandwatkins.svg" }
+        ];
+
+        // Grade color mapping
+        const gradeColors = {
+            'A': 'var(--grade-a)',
+            'B': 'var(--grade-b)',
+            'C': 'var(--grade-c)',
+            'D': 'var(--grade-d)',
+            'F': 'var(--grade-f)'
+        };
+
+        // Create a firm card
+        function createFirmCard(firm) {
+            const logoHtml = firm.logo 
+                ? `<img src="${firm.logo}" alt="${firm.name} logo" class="firm-logo">`
+                : `<span>Logo</span>`;
+            
+            return `
+                <div class="firm-card" data-grade="${firm.grade}" data-name="${firm.name.toLowerCase()}" data-firm="${firm.name}">
+                    <div class="card-top">
+                        <span class="vault-rank">#${firm.rank}</span>
+                        <label class="compare-checkbox" title="Add to compare">
+                            <input type="checkbox" class="compare-check" data-firm="${firm.name}">
+                        </label>
+                    </div>
+                    <div class="logo-placeholder">
+                        ${logoHtml}
+                    </div>
+                    <div class="firm-name">${firm.name}</div>
+                    <div class="card-grades">
+                        <div class="overall-grade" style="background: ${gradeColors[firm.grade]};">${firm.grade}</div>
+                        <div class="sub-grades">
+                            <div class="sub-grade" title="Transactions">
+                                <span class="sub-grade-icon">🤝</span>
+                                <div class="sub-grade-value" style="background: ${gradeColors[firm.transaction]};">${firm.transaction}</div>
+                            </div>
+                            <div class="sub-grade" title="Litigation">
+                                <span class="sub-grade-icon">⚖️</span>
+                                <div class="sub-grade-value" style="background: ${gradeColors[firm.litigation]};">${firm.litigation}</div>
+                            </div>
+                            <div class="sub-grade" title="Lobbying">
+                                <span class="sub-grade-icon">🏛️</span>
+                                <div class="sub-grade-value" style="background: ${gradeColors[firm.lobbying]};">${firm.lobbying}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Populate grids
+        function populateGrids() {
+            const grades = ['A', 'B', 'C', 'D', 'F'];
+            grades.forEach(grade => {
+                const grid = document.getElementById(`grade-${grade.toLowerCase()}-grid`);
+                const gradeFirms = firms.filter(f => f.grade === grade).sort((a, b) => a.rank - b.rank);
+                grid.innerHTML = gradeFirms.map(createFirmCard).join('');
+            });
+        }
+
+        // Filter and search functionality
+        function filterFirms() {
+            const searchTerm = document.getElementById('firmSearch').value.toLowerCase();
+            const checkedGrades = Array.from(document.querySelectorAll('.grade-filter:checked')).map(cb => cb.value);
+            
+            let totalVisible = 0;
+            const grades = ['A', 'B', 'C', 'D', 'F'];
+            
+            grades.forEach(grade => {
+                const bucket = document.querySelector(`.grade-bucket[data-grade="${grade}"]`);
+                const cards = bucket.querySelectorAll('.firm-card');
+                let visibleInBucket = 0;
+                
+                cards.forEach(card => {
+                    const cardGrade = card.dataset.grade;
+                    const cardName = card.dataset.name;
+                    const matchesSearch = cardName.includes(searchTerm);
+                    const matchesGrade = checkedGrades.includes(cardGrade);
+                    
+                    if (matchesSearch && matchesGrade) {
+                        card.classList.remove('hidden');
+                        visibleInBucket++;
+                        totalVisible++;
+                    } else {
+                        card.classList.add('hidden');
+                    }
+                });
+                
+                // Update bucket count and visibility
+                const countEl = bucket.querySelector('.count');
+                countEl.textContent = visibleInBucket;
+                
+                if (visibleInBucket === 0 || !checkedGrades.includes(grade)) {
+                    bucket.classList.add('hidden');
+                } else {
+                    bucket.classList.remove('hidden');
+                }
+            });
+            
+            // Show/hide no results message
+            document.getElementById('noResults').style.display = totalVisible === 0 ? 'block' : 'none';
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            populateGrids();
+            
+            // Search listener
+            document.getElementById('firmSearch').addEventListener('input', filterFirms);
+            
+            // Grade filter listeners
+            document.querySelectorAll('.grade-filter').forEach(cb => {
+                cb.addEventListener('change', filterFirms);
+            });
+            
+            // Card click to go to profile (placeholder)
+            document.addEventListener('click', (e) => {
+                const card = e.target.closest('.firm-card');
+                if (card && !e.target.closest('.compare-checkbox')) {
+                    const firmName = card.querySelector('.firm-name').textContent;
+                    // In production, this would navigate to the firm profile
+                    console.log('Navigate to profile:', firmName);
+                    // window.location.href = `/profiles/${firmName.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+                }
+            });
+
+            // Comparison functionality
+            initComparison();
+        });
+
+        // Comparison state
+        let selectedFirms = [];
+        const MAX_COMPARE = 4;
+
+        function initComparison() {
+            const compareBar = document.getElementById('compareBar');
+            const compareCount = document.getElementById('compareCount');
+            const selectedFirmsContainer = document.getElementById('selectedFirms');
+            const clearBtn = document.getElementById('clearCompare');
+            const openBtn = document.getElementById('openCompare');
+            const modalOverlay = document.getElementById('modalOverlay');
+            const modalClose = document.getElementById('modalClose');
+
+            // Checkbox change handler
+            document.addEventListener('change', (e) => {
+                if (e.target.classList.contains('compare-check')) {
+                    const firmName = e.target.dataset.firm;
+                    
+                    if (e.target.checked) {
+                        if (selectedFirms.length < MAX_COMPARE) {
+                            selectedFirms.push(firmName);
+                        } else {
+                            e.target.checked = false;
+                            alert(`Maximum ${MAX_COMPARE} firms can be compared at once.`);
+                        }
+                    } else {
+                        selectedFirms = selectedFirms.filter(f => f !== firmName);
+                    }
+                    
+                    updateCompareBar();
+                }
+            });
+
+            // Clear all
+            clearBtn.addEventListener('click', () => {
+                selectedFirms = [];
+                document.querySelectorAll('.compare-check').forEach(cb => cb.checked = false);
+                updateCompareBar();
+            });
+
+            // Open modal
+            openBtn.addEventListener('click', () => {
+                if (selectedFirms.length >= 2) {
+                    buildComparisonTable();
+                    modalOverlay.classList.add('visible');
+                }
+            });
+
+            // Close modal
+            modalClose.addEventListener('click', () => {
+                modalOverlay.classList.remove('visible');
+            });
+
+            modalOverlay.addEventListener('click', (e) => {
+                if (e.target === modalOverlay) {
+                    modalOverlay.classList.remove('visible');
+                }
+            });
+
+            // Remove individual firm from selection
+            selectedFirmsContainer.addEventListener('click', (e) => {
+                if (e.target.classList.contains('remove')) {
+                    const firmName = e.target.dataset.firm;
+                    selectedFirms = selectedFirms.filter(f => f !== firmName);
+                    
+                    // Uncheck the checkbox
+                    const checkbox = document.querySelector(`.compare-check[data-firm="${firmName}"]`);
+                    if (checkbox) checkbox.checked = false;
+                    
+                    updateCompareBar();
+                }
+            });
+        }
+
+        function updateCompareBar() {
+            const compareBar = document.getElementById('compareBar');
+            const compareCount = document.getElementById('compareCount');
+            const selectedFirmsContainer = document.getElementById('selectedFirms');
+            const openBtn = document.getElementById('openCompare');
+
+            compareCount.textContent = selectedFirms.length;
+
+            // Show/hide bar
+            if (selectedFirms.length >= 2) {
+                compareBar.classList.add('visible');
+            } else {
+                compareBar.classList.remove('visible');
+            }
+
+            // Update selected firms tags
+            selectedFirmsContainer.innerHTML = selectedFirms.map(name => {
+                const shortName = name.length > 20 ? name.substring(0, 20) + '...' : name;
+                return `<span class="selected-firm-tag">${shortName}<span class="remove" data-firm="${name}">×</span></span>`;
+            }).join('');
+
+            // Enable/disable compare button
+            openBtn.disabled = selectedFirms.length < 2;
+        }
+
+        function buildComparisonTable() {
+            const table = document.getElementById('comparisonTable');
+            const selectedFirmData = selectedFirms.map(name => firms.find(f => f.name === name));
+
+            const rows = [
+                { section: 'Overview' },
+                { label: 'Vault Rank', key: 'rank', format: (v) => `#${v}` },
+                { label: 'Climate Grade', key: 'grade', isGrade: true },
+                { section: 'Sub-Grades' },
+                { label: '🤝 Transactions', key: 'transaction', isGrade: true },
+                { label: '⚖️ Litigation', key: 'litigation', isGrade: true },
+                { label: '🏛️ Lobbying', key: 'lobbying', isGrade: true }
+            ];
+
+            let html = `
+                <thead>
+                    <tr>
+                        <th></th>
+                        ${selectedFirmData.map(firm => `
+                            <th class="firm-header">
+                                <div class="firm-header-content">
+                                    ${firm.logo 
+                                        ? `<img src="${firm.logo}" alt="${firm.name}" class="firm-header-logo">`
+                                        : `<div style="height: 40px; display: flex; align-items: center; color: var(--text-muted);">No logo</div>`
+                                    }
+                                    <span class="firm-header-name">${firm.name}</span>
+                                    <span class="firm-header-rank">#${firm.rank}</span>
+                                </div>
+                            </th>
+                        `).join('')}
+                    </tr>
+                </thead>
+                <tbody>
+            `;
+
+            rows.forEach(row => {
+                if (row.section) {
+                    html += `
+                        <tr class="section-header">
+                            <td colspan="${selectedFirmData.length + 1}">${row.section}</td>
+                        </tr>
+                    `;
+                } else {
+                    html += `
+                        <tr class="metric-row">
+                            <td>${row.label}</td>
+                            ${selectedFirmData.map(firm => {
+                                const value = firm[row.key];
+                                if (row.isGrade) {
+                                    return `<td class="grade-cell" style="color: ${gradeColors[value]}">${value}</td>`;
+                                } else if (row.format) {
+                                    return `<td>${row.format(value)}</td>`;
+                                } else {
+                                    return `<td>${value}</td>`;
+                                }
+                            }).join('')}
+                        </tr>
+                    `;
+                }
+            });
+
+            html += '</tbody>';
+            table.innerHTML = html;
+        }
+    </script>
+</body>
+</html>

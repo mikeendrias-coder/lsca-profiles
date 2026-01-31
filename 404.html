@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firm Profile - LSCA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --lsca-green: #4CAF50;
+            --lsca-green-dark: #2D3E2F;
+            --lsca-green-light: #E8F5E9;
+            --grade-a: #22c55e;
+            --grade-b: #84cc16;
+            --grade-c: #eab308;
+            --grade-d: #f97316;
+            --grade-f: #ef4444;
+            --fossil-fuel: #ef4444;
+            --renewable: #22c55e;
+            --text-dark: #1f2937;
+            --text-muted: #6b7280;
+            --border: #e5e7eb;
+            --bg-light: #f9fafb;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text-dark);
+            background: #fff;
+            line-height: 1.6;
+        }
+
+        .site-header {
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo { height: 50px; }
+
+        .nav-links { display: flex; gap: 2rem; }
+
+        .nav-links a {
+            color: var(--lsca-green-dark);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-links a:hover { color: var(--lsca-green); }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--lsca-green);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 1rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .back-link:hover { text-decoration: underline; }
+
+        .profile-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem 4rem;
+        }
+
+        .profile-header {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .firm-name {
+            font-size: 2rem;
+            color: var(--lsca-green-dark);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .vault-rank {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .grade-display {
+            display: flex;
+            align-items: flex-end;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .main-grade {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .main-grade-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 0.25rem;
+        }
+
+        .main-grade-value {
+            font-size: 5rem;
+            font-weight: 700;
+            line-height: 1;
+            border-radius: 12px;
+            padding: 0.25rem 1rem;
+            color: #fff;
+        }
+
+        .sub-grades { display: flex; gap: 1rem; }
+
+        .sub-grade {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            background: var(--bg-light);
+            border-radius: 8px;
+            min-width: 80px;
+        }
+
+        .sub-grade-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 0.25rem;
+        }
+
+        .sub-grade-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .quote-intro {
+            font-size: 1.25rem;
+            font-style: italic;
+            color: var(--lsca-green-dark);
+            border-left: 4px solid var(--lsca-green);
+            padding-left: 1rem;
+            margin-top: 1rem;
+        }
+
+        .profile-sidebar {
+            background: var(--bg-light);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .sidebar-title {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-item:last-child { border-bottom: none; }
+
+        .sidebar-label { color: var(--text-muted); font-size: 0.9rem; }
+        .sidebar-value { font-weight: 600; }
+
+        .engagement-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .engagement-badge.submitted { background: #dcfce7; color: #166534; }
+        .engagement-badge.no-response { background: #fef3c7; color: #92400e; }
+
+        .activity-flag {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+        }
+
+        .activity-flag.positive { background: #dcfce7; border: 1px solid #86efac; }
+        .activity-flag.negative { background: #fee2e2; border: 1px solid #fca5a5; }
+
+        .activity-icon { font-size: 1.5rem; }
+        .activity-text { font-weight: 600; }
+        .activity-flag.positive .activity-text { color: #166534; }
+        .activity-flag.negative .activity-text { color: #991b1b; }
+
+        .section-title {
+            font-size: 1.25rem;
+            color: var(--lsca-green-dark);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 24px;
+            background: var(--lsca-green);
+            border-radius: 2px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: var(--bg-light);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+        }
+
+        .stat-card-title {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .stat-comparison { display: flex; gap: 1rem; }
+        .stat-item { flex: 1; }
+        .stat-label { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.25rem; }
+        .stat-value { font-size: 1.5rem; font-weight: 700; }
+        .stat-value.fossil { color: var(--fossil-fuel); }
+        .stat-value.renewable { color: var(--renewable); }
+        .stat-subtext { font-size: 0.8rem; color: var(--text-muted); }
+
+        .stat-bar {
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            margin-top: 0.75rem;
+            overflow: hidden;
+            display: flex;
+        }
+
+        .stat-bar-fill { height: 100%; }
+        .stat-bar-fill.fossil { background: var(--fossil-fuel); }
+        .stat-bar-fill.renewable { background: var(--renewable); }
+
+        .content-section {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: var(--bg-light);
+            border-radius: 12px;
+        }
+
+        .content-section p { margin-bottom: 1rem; }
+        .content-section p:last-child { margin-bottom: 0; }
+
+        .student-guidance {
+            background: linear-gradient(135deg, var(--lsca-green-light) 0%, #fff 100%);
+            border: 2px solid var(--lsca-green);
+        }
+
+        .guidance-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--lsca-green-dark);
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .guidance-icon { font-size: 1.5rem; }
+
+        .site-footer {
+            background: var(--lsca-green-dark);
+            color: #fff;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .footer-logo {
+            height: 40px;
+            filter: brightness(0) invert(1);
+            margin-bottom: 1rem;
+        }
+
+        .footer-text { font-size: 0.9rem; opacity: 0.8; }
+
+        .not-found {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .not-found h1 { color: var(--lsca-green-dark); margin-bottom: 1rem; }
+
+        @media (max-width: 768px) {
+            .profile-header { grid-template-columns: 1fr; }
+            .grade-display { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-content">
+            <img src="https://images.squarespace-cdn.com/content/v1/646e3b899493ae261720e957/c97bb057-7d9d-4a29-b019-9dd824be333c/logo.png" alt="Law Students for Climate Accountability" class="logo">
+            <nav class="nav-links">
+                <a href="https://ls4ca.org/scorecard">Scorecard</a>
+                <a href="/">Profiles</a>
+                <a href="https://ls4ca.org/take-action">Take Action</a>
+                <a href="https://ls4ca.org/about">About</a>
+            </nav>
+        </div>
+    </header>
+
+    <a href="/" class="back-link">← Back to All Firms</a>
+
+    <div class="profile-container" id="profileContainer">
+        <!-- Populated by JavaScript -->
+    </div>
+
+    <footer class="site-footer">
+        <img src="https://images.squarespace-cdn.com/content/v1/646e3b899493ae261720e957/90bf33a1-f881-4bde-b7eb-3cb81575ece0/white+logo.png" alt="LSCA" class="footer-logo">
+        <p class="footer-text">Law Students for Climate Accountability is a fiscally sponsored project of Earth Island Institute, a 501(c)(3) nonprofit organization.</p>
+    </footer>
+
+    <script>
+        // Firm data - will be replaced with Google Sheets fetch later
+        const firms = {
+            "foley-hoag": {
+                name: "Foley Hoag LLP",
+                slug: "foley-hoag",
+                rank: 98,
+                grade: "A",
+                transaction: "A",
+                litigation: "A",
+                lobbying: "A",
+                priorGrade: "A",
+                engagement: "Submitted Statement",
+                takeaway: "A standout among A-rated firms, Foley Hoag is the first to crack the top 5 in mitigating litigation work.",
+                ffTransactionValue: "$0",
+                ffTransactionCount: 0,
+                renewableTransactionValue: "$509M",
+                renewableTransactionCount: 6,
+                exacerbatingPoints: 0,
+                exacerbatingCount: 0,
+                mitigatingPoints: 10,
+                mitigatingCount: 3,
+                new2024Exacerbating: 0,
+                ffLobbyingValue: "$0",
+                ffLobbyingCount: 0,
+                renewableLobbyingValue: "$5K",
+                renewableLobbyingCount: 1,
+                transactionRank: 78,
+                litigationRank: 64,
+                firmStatement: "Foley Hoag established an energy and climate practice focused on the clean energy transition in 2005, long before such work was common in the legal industry. Today, our Energy & Climate practice encompasses more than 60 lawyers across our offices, advising on renewable energy development, climate policy, carbon markets, environmental justice, and sustainable finance. We represent developers, investors, utilities, municipalities, and nonprofits working to accelerate decarbonization. Foley Hoag has earned national recognition for our climate work, including from Chambers USA and The Legal 500. We are proud to have maintained an 'A' rating from Law Students for Climate Accountability from 2023 through 2025.",
+                statementAuthor: "Shai Fogelson, Energy & Climate Marketing Lead",
+                analysis: "Foley Hoag stands out as a model for how a law firm can thrive without fossil fuel work. With zero fossil fuel transactions, zero exacerbating litigation, and zero fossil fuel lobbying over the five-year period, they've achieved a perfect record across all three categories.\n\nWhat makes Foley Hoag particularly notable is their proactive engagement: they're one of the few firms to submit a statement to LSCA, demonstrating transparency about their climate commitments. Their ranking of 5th in mitigating litigation shows that their climate work goes beyond simply avoiding harm; they're actively using legal expertise to support climate solutions.",
+                guidance: "Foley Hoag represents one of the clearest choices for climate-conscious law students. If you want to work on renewable energy, climate policy, or environmental justice, this firm offers substantial opportunities over 60 lawyers work in their Energy & Climate practice.\n\nYou're unlikely to be asked to work on fossil fuel matters here. The firm has made a strategic decision to focus on the energy transition, and associates report that this focus permeates the culture."
+            },
+            "wilson-sonsini": {
+                name: "Wilson Sonsini Goodrich & Rosati",
+                slug: "wilson-sonsini",
+                rank: 36,
+                grade: "C",
+                transaction: "C",
+                litigation: "B",
+                lobbying: "B",
+                priorGrade: "A",
+                engagement: "No Response",
+                takeaway: "A cautionary tale: Wilson Sonsini dropped from A to C in a single year, showing that grades aren't permanent.",
+                ffTransactionValue: "$59M",
+                ffTransactionCount: 2,
+                renewableTransactionValue: "$5.68B",
+                renewableTransactionCount: 51,
+                exacerbatingPoints: 2,
+                exacerbatingCount: 1,
+                mitigatingPoints: 0,
+                mitigatingCount: 0,
+                new2024Exacerbating: 0,
+                ffLobbyingValue: "$0",
+                ffLobbyingCount: 0,
+                renewableLobbyingValue: "$0",
+                renewableLobbyingCount: 0,
+                transactionRank: 74,
+                litigationRank: 59,
+                firmStatement: null,
+                statementAuthor: null,
+                analysis: "Wilson Sonsini's drop from A to C is striking and illustrates how LSCA's methodology works. Looking at the raw numbers, the firm's renewable-to-fossil-fuel ratio is actually impressive: $5.68 billion in renewable transactions versus $59 million in fossil fuel work (a 96:1 ratio in renewables' favor).\n\nSo why the drop? LSCA's methodology includes a safe harbor that allows for one piece of fossil fuel work before penalties apply. Wilson Sonsini had two fossil fuel transactions, pushing them past this threshold.",
+                guidance: "Wilson Sonsini is a mixed picture. The firm does substantial renewable energy work 51 deals worth $5.68 billion over five years which is among the highest in the Vault 100. Their tech-focused practice means many associates work on clean tech and sustainability ventures.\n\nHowever, the firm isn't fossil-fuel-free. If you're considering Wilson Sonsini, you may want to ask during interviews about how work is assigned and whether you can express preferences about client types."
+            },
+            "latham-watkins": {
+                name: "Latham & Watkins",
+                slug: "latham-watkins",
+                rank: 4,
+                grade: "F",
+                transaction: "F",
+                litigation: "F",
+                lobbying: "B",
+                priorGrade: "F",
+                engagement: "No Response",
+                takeaway: "One of the most prestigious firms in the world and one of the worst for the climate. Latham has earned an F every year LSCA has published a scorecard.",
+                ffTransactionValue: "$184.1B",
+                ffTransactionCount: 340,
+                renewableTransactionValue: "$70.5B",
+                renewableTransactionCount: 344,
+                exacerbatingPoints: 97,
+                exacerbatingCount: 26,
+                mitigatingPoints: 23,
+                mitigatingCount: 8,
+                new2024Exacerbating: 4,
+                ffLobbyingValue: "$0",
+                ffLobbyingCount: 0,
+                renewableLobbyingValue: "$0",
+                renewableLobbyingCount: 0,
+                transactionRank: 2,
+                litigationRank: 6,
+                firmStatement: null,
+                statementAuthor: null,
+                analysis: "Latham & Watkins is one of the largest, most prestigious law firms in the world and one of the most significant enablers of the fossil fuel industry. Their numbers are staggering: $184.1 billion in fossil fuel transactions over five years, ranking them 2nd worst among all Vault 100 firms in this category.\n\nIn litigation, the picture is similarly concerning. With 97 exacerbating points from 26 representations, they rank 6th worst. The 2024 activity flag is particularly concerning: Latham took on 4 new fossil fuel litigation cases this year.",
+                guidance: "This is a firm where you are likely to be asked to work on fossil fuel matters. With 340 fossil fuel transactions and 26 exacerbating litigation representations over five years, this work is a significant part of Latham's practice.\n\nLatham does have a substantial renewable energy practice, and some associates may be able to focus their careers there. However, the firm's overall trajectory shows no sign of reducing fossil fuel work."
+            }
+        };
+
+        const gradeColors = {
+            'A': 'var(--grade-a)',
+            'B': 'var(--grade-b)',
+            'C': 'var(--grade-c)',
+            'D': 'var(--grade-d)',
+            'F': 'var(--grade-f)'
+        };
+
+        function getSlugFromURL() {
+            const path = window.location.pathname;
+            const slug = path.replace(/^\//, '').replace(/\.html$/, '').replace(/\/$/, '');
+            return slug;
+        }
+
+        function renderProfile(firm) {
+            const container = document.getElementById('profileContainer');
+            document.title = `${firm.name} - LSCA Climate Profile`;
+
+            const activityFlag = firm.new2024Exacerbating === 0
+                ? `<div class="activity-flag positive"><span class="activity-icon">✓</span><span class="activity-text">No new fossil fuel litigation in 2024</span></div>`
+                : `<div class="activity-flag negative"><span class="activity-icon">⚠</span><span class="activity-text">Took on ${firm.new2024Exacerbating} new fossil fuel cases in 2024</span></div>`;
+
+            const firmStatementSection = firm.firmStatement
+                ? `<blockquote style="border-left: 4px solid var(--lsca-green); padding-left: 1.5rem; font-style: italic;">
+                    <p>${firm.firmStatement}</p>
+                    <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 1rem; font-style: normal;">— ${firm.statementAuthor}</p>
+                   </blockquote>`
+                : `<p style="color: var(--text-muted); font-style: italic;">${firm.name} has not submitted a statement to LSCA. We've reached out and await their response.</p>`;
+
+            const trajectoryArrow = firm.grade === firm.priorGrade ? '→' : (firm.grade < firm.priorGrade ? '↑' : '↓');
+            const trajectoryClass = firm.grade === firm.priorGrade ? '' : (firm.grade < firm.priorGrade ? 'style="color: var(--grade-a)"' : 'style="color: var(--grade-f)"');
+
+            const guidanceIcon = ['A', 'B'].includes(firm.grade) ? '💡' : '⚠️';
+
+            container.innerHTML = `
+                <div class="profile-header">
+                    <div class="profile-main">
+                        <h2 class="firm-name">
+                            ${firm.name}
+                            <span class="vault-rank">Vault #${firm.rank}</span>
+                        </h2>
+                        <div class="grade-display">
+                            <div class="main-grade">
+                                <span class="main-grade-label">Climate Grade</span>
+                                <span class="main-grade-value" style="background: ${gradeColors[firm.grade]};">${firm.grade}</span>
+                            </div>
+                            <div class="sub-grades">
+                                <div class="sub-grade">
+                                    <span class="sub-grade-label">Transactions</span>
+                                    <span class="sub-grade-value" style="color: ${gradeColors[firm.transaction]};">${firm.transaction}</span>
+                                </div>
+                                <div class="sub-grade">
+                                    <span class="sub-grade-label">Litigation</span>
+                                    <span class="sub-grade-value" style="color: ${gradeColors[firm.litigation]};">${firm.litigation}</span>
+                                </div>
+                                <div class="sub-grade">
+                                    <span class="sub-grade-label">Lobbying</span>
+                                    <span class="sub-grade-value" style="color: ${gradeColors[firm.lobbying]};">${firm.lobbying}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="quote-intro">"${firm.takeaway}"</p>
+                    </div>
+                    <aside class="profile-sidebar">
+                        <h3 class="sidebar-title">Firm Facts</h3>
+                        <div class="sidebar-item">
+                            <span class="sidebar-label">Vault Rank</span>
+                            <span class="sidebar-value">#${firm.rank}</span>
+                        </div>
+                        <div class="sidebar-item">
+                            <span class="sidebar-label">Climate Grade</span>
+                            <span class="sidebar-value" style="color: ${gradeColors[firm.grade]};">${firm.grade}</span>
+                        </div>
+                        <div class="sidebar-item">
+                            <span class="sidebar-label">Grade Trajectory</span>
+                            <span class="sidebar-value">
+                                <span style="color: ${gradeColors[firm.priorGrade]}">${firm.priorGrade}</span>
+                                <span ${trajectoryClass}>${trajectoryArrow}</span>
+                                <span style="color: ${gradeColors[firm.grade]}">${firm.grade}</span>
+                            </span>
+                        </div>
+                        <div class="sidebar-item">
+                            <span class="sidebar-label">Engagement</span>
+                            <span class="engagement-badge ${firm.engagement === 'Submitted Statement' ? 'submitted' : 'no-response'}">${firm.engagement}</span>
+                        </div>
+                        <div class="sidebar-item">
+                            <span class="sidebar-label">Transaction Rank</span>
+                            <span class="sidebar-value">#${firm.transactionRank}</span>
+                        </div>
+                        <div class="sidebar-item">
+                            <span class="sidebar-label">Litigation Rank</span>
+                            <span class="sidebar-value">#${firm.litigationRank}</span>
+                        </div>
+                    </aside>
+                </div>
+
+                ${activityFlag}
+
+                <section style="margin: 2rem 0;">
+                    <h3 class="section-title">By the Numbers (2020-2024)</h3>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-card-title">Transactions</div>
+                            <div class="stat-comparison">
+                                <div class="stat-item">
+                                    <div class="stat-label">Fossil Fuel</div>
+                                    <div class="stat-value fossil">${firm.ffTransactionValue}</div>
+                                    <div class="stat-subtext">${firm.ffTransactionCount} deals</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-label">Renewable Energy</div>
+                                    <div class="stat-value renewable">${firm.renewableTransactionValue}</div>
+                                    <div class="stat-subtext">${firm.renewableTransactionCount} deals</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-card-title">Litigation Points</div>
+                            <div class="stat-comparison">
+                                <div class="stat-item">
+                                    <div class="stat-label">Exacerbating</div>
+                                    <div class="stat-value fossil">${firm.exacerbatingPoints}</div>
+                                    <div class="stat-subtext">${firm.exacerbatingCount} representations</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-label">Mitigating</div>
+                                    <div class="stat-value renewable">${firm.mitigatingPoints}</div>
+                                    <div class="stat-subtext">${firm.mitigatingCount} representations</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-card-title">Lobbying Compensation</div>
+                            <div class="stat-comparison">
+                                <div class="stat-item">
+                                    <div class="stat-label">Fossil Fuel</div>
+                                    <div class="stat-value fossil">${firm.ffLobbyingValue}</div>
+                                    <div class="stat-subtext">${firm.ffLobbyingCount} clients</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-label">Renewable Energy</div>
+                                    <div class="stat-value renewable">${firm.renewableLobbyingValue}</div>
+                                    <div class="stat-subtext">${firm.renewableLobbyingCount} clients</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h3 class="section-title">Firm Statement</h3>
+                    ${firmStatementSection}
+                </section>
+
+                <section class="content-section">
+                    <h3 class="section-title">LSCA Analysis</h3>
+                    ${firm.analysis.split('\n\n').map(p => `<p>${p}</p>`).join('')}
+                </section>
+
+                <section class="content-section student-guidance">
+                    <h3 class="guidance-title">
+                        <span class="guidance-icon">${guidanceIcon}</span>
+                        If You're Considering This Firm
+                    </h3>
+                    ${firm.guidance.split('\n\n').map(p => `<p>${p}</p>`).join('')}
+                </section>
+            `;
+        }
+
+        function renderNotFound(slug) {
+            const container = document.getElementById('profileContainer');
+            container.innerHTML = `
+                <div class="not-found">
+                    <h1>Firm Not Found</h1>
+                    <p>We couldn't find a profile for "${slug}". This firm may not be in the Vault 100 or the profile hasn't been created yet.</p>
+                    <p><a href="/" style="color: var(--lsca-green);">← Back to all firms</a></p>
+                </div>
+            `;
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            const slug = getSlugFromURL();
+            
+            if (slug && firms[slug]) {
+                renderProfile(firms[slug]);
+            } else if (slug) {
+                renderNotFound(slug);
+            } else {
+                window.location.href = '/';
+            }
+        });
+    </script>
+</body>
+</html>
