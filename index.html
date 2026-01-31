@@ -1132,16 +1132,15 @@
                 cb.addEventListener('change', filterFirms);
             });
             
-            // Card click to go to profile (placeholder)
-            document.addEventListener('click', (e) => {
-                const card = e.target.closest('.firm-card');
-                if (card && !e.target.closest('.compare-checkbox')) {
-                    const firmName = card.querySelector('.firm-name').textContent;
-                    // In production, this would navigate to the firm profile
-                    console.log('Navigate to profile:', firmName);
-                    // window.location.href = `/profiles/${firmName.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
-                }
-            });
+                // Card click to go to profile
+                document.addEventListener('click', (e) => {
+                    const card = e.target.closest('.firm-card');
+                    if (card && !e.target.closest('.compare-checkbox')) {
+                        const firmName = card.dataset.firm;
+                        const slug = firmName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/, '');
+                        window.location.href = '/' + slug;
+                    }
+                });    
 
             // Comparison functionality
             initComparison();
