@@ -400,8 +400,11 @@
 
         function getSlugFromURL() {
             const path = window.location.pathname;
-            const slug = path.replace(/^\//, '').replace(/\.html$/, '').replace(/\/$/, '');
+            // Remove /lsca-profiles/ prefix for GitHub Pages
+            const slug = path.replace(/^\/lsca-profiles\/?/, '').replace(/\.html$/, '').replace(/\/$/, '');
             return slug;
+        }
+
         }
 
         function formatCurrency(value) {
