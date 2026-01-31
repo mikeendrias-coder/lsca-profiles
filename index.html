@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Firm Profiles - LSCA</title>
     <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <style>
         :root {
             --lsca-green: #4CAF50;
@@ -212,6 +213,27 @@
             background: #fff;
             border-radius: 6px;
             border: 1px dashed var(--border);
+        }
+
+        /* Loading State */
+        .loading-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-muted);
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border);
+            border-top-color: var(--lsca-green);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
         /* Grade Buckets */
@@ -724,10 +746,10 @@
         <div class="header-content">
             <img src="https://images.squarespace-cdn.com/content/v1/646e3b899493ae261720e957/c97bb057-7d9d-4a29-b019-9dd824be333c/logo.png" alt="Law Students for Climate Accountability" class="logo">
             <nav class="nav-links">
-                <a href="#">Scorecard</a>
-                <a href="#" class="active">Profiles</a>
-                <a href="#">Take Action</a>
-                <a href="#">About</a>
+                <a href="https://ls4ca.org/scorecard">Scorecard</a>
+                <a href="/" class="active">Profiles</a>
+                <a href="https://ls4ca.org/take-action">Take Action</a>
+                <a href="https://ls4ca.org/about">About</a>
             </nav>
         </div>
     </header>
@@ -797,80 +819,76 @@
         </aside>
 
         <!-- Firms Grid by Grade -->
-        <div class="firms-container">
+        <div class="firms-container" id="firmsContainer">
+            <!-- Loading State -->
+            <div class="loading-state" id="loadingState">
+                <div class="loading-spinner"></div>
+                <p>Loading firm data...</p>
+            </div>
+
             <!-- A-Grade Bucket -->
-            <section class="grade-bucket" data-grade="A">
+            <section class="grade-bucket hidden" data-grade="A">
                 <div class="bucket-header">
                     <div class="bucket-grade" style="background: var(--grade-a);">A</div>
                     <div class="bucket-info">
                         <h2>A-Grade Firms</h2>
                         <p>Climate leaders with minimal fossil fuel involvement</p>
                     </div>
-                    <span class="bucket-count"><span class="count">13</span> firms</span>
+                    <span class="bucket-count"><span class="count">0</span> firms</span>
                 </div>
-                <div class="firms-grid" id="grade-a-grid">
-                    <!-- Cards populated by JS -->
-                </div>
+                <div class="firms-grid" id="grade-a-grid"></div>
             </section>
 
             <!-- B-Grade Bucket -->
-            <section class="grade-bucket" data-grade="B">
+            <section class="grade-bucket hidden" data-grade="B">
                 <div class="bucket-header">
                     <div class="bucket-grade" style="background: var(--grade-b);">B</div>
                     <div class="bucket-info">
                         <h2>B-Grade Firms</h2>
                         <p>Above average climate performance</p>
                     </div>
-                    <span class="bucket-count"><span class="count">6</span> firms</span>
+                    <span class="bucket-count"><span class="count">0</span> firms</span>
                 </div>
-                <div class="firms-grid" id="grade-b-grid">
-                    <!-- Cards populated by JS -->
-                </div>
+                <div class="firms-grid" id="grade-b-grid"></div>
             </section>
 
             <!-- C-Grade Bucket -->
-            <section class="grade-bucket" data-grade="C">
+            <section class="grade-bucket hidden" data-grade="C">
                 <div class="bucket-header">
                     <div class="bucket-grade" style="background: var(--grade-c);">C</div>
                     <div class="bucket-info">
                         <h2>C-Grade Firms</h2>
                         <p>Mixed climate record</p>
                     </div>
-                    <span class="bucket-count"><span class="count">8</span> firms</span>
+                    <span class="bucket-count"><span class="count">0</span> firms</span>
                 </div>
-                <div class="firms-grid" id="grade-c-grid">
-                    <!-- Cards populated by JS -->
-                </div>
+                <div class="firms-grid" id="grade-c-grid"></div>
             </section>
 
             <!-- D-Grade Bucket -->
-            <section class="grade-bucket" data-grade="D">
+            <section class="grade-bucket hidden" data-grade="D">
                 <div class="bucket-header">
                     <div class="bucket-grade" style="background: var(--grade-d);">D</div>
                     <div class="bucket-info">
                         <h2>D-Grade Firms</h2>
                         <p>Below average climate performance</p>
                     </div>
-                    <span class="bucket-count"><span class="count">35</span> firms</span>
+                    <span class="bucket-count"><span class="count">0</span> firms</span>
                 </div>
-                <div class="firms-grid" id="grade-d-grid">
-                    <!-- Cards populated by JS -->
-                </div>
+                <div class="firms-grid" id="grade-d-grid"></div>
             </section>
 
             <!-- F-Grade Bucket -->
-            <section class="grade-bucket" data-grade="F">
+            <section class="grade-bucket hidden" data-grade="F">
                 <div class="bucket-header">
                     <div class="bucket-grade" style="background: var(--grade-f);">F</div>
                     <div class="bucket-info">
                         <h2>F-Grade Firms</h2>
                         <p>Significant fossil fuel involvement</p>
                     </div>
-                    <span class="bucket-count"><span class="count">38</span> firms</span>
+                    <span class="bucket-count"><span class="count">0</span> firms</span>
                 </div>
-                <div class="firms-grid" id="grade-f-grid">
-                    <!-- Cards populated by JS -->
-                </div>
+                <div class="firms-grid" id="grade-f-grid"></div>
             </section>
 
             <!-- No Results Message -->
@@ -901,9 +919,7 @@
                 <button class="modal-close" id="modalClose">×</button>
             </div>
             <div class="modal-body">
-                <table class="comparison-table" id="comparisonTable">
-                    <!-- Populated by JS -->
-                </table>
+                <table class="comparison-table" id="comparisonTable"></table>
             </div>
         </div>
     </div>
@@ -915,109 +931,11 @@
     </footer>
 
     <script>
-        // Firm data
-        const firms = [
-            { name: "Akerman", rank: 100, grade: "A", transaction: "A", litigation: "B", lobbying: "A", logo: null },
-            { name: "Arnold & Porter Kaye Scholer", rank: 33, grade: "F", transaction: "B", litigation: "F", lobbying: "C", logo: null },
-            { name: "Boies Schiller Flexner", rank: 56, grade: "B", transaction: "B", litigation: "B", lobbying: "B", logo: null },
-            { name: "Cozen O'Connor", rank: 91, grade: "D", transaction: "B", litigation: "A", lobbying: "D", logo: null },
-            { name: "Crowell & Moring", rank: 65, grade: "F", transaction: "A", litigation: "F", lobbying: "A", logo: null },
-            { name: "Davis Wright Tremaine", rank: 78, grade: "A", transaction: "B", litigation: "B", lobbying: "B", logo: null },
-            { name: "Dechert", rank: 50, grade: "A", transaction: "B", litigation: "B", lobbying: "B", logo: null },
-            { name: "Faegre Drinker", rank: 93, grade: "D", transaction: "A", litigation: "B", lobbying: "D", logo: null },
-            { name: "Fenwick & West", rank: 70, grade: "A", transaction: "B", litigation: "B", lobbying: "B", logo: null },
-            { name: "Fish & Richardson", rank: 82, grade: "A", transaction: "B", litigation: "B", lobbying: "B", logo: null },
-            { name: "Foley Hoag", rank: 98, grade: "A", transaction: "A", litigation: "A", lobbying: "A", logo: null },
-            { name: "Gunderson Dettmer", rank: 85, grade: "A", transaction: "B", litigation: "B", lobbying: "B", logo: null },
-            { name: "Irell & Manella", rank: 84, grade: "B", transaction: "B", litigation: "B", lobbying: "B", logo: null },
-            { name: "Jenner & Block", rank: 63, grade: "C", transaction: "B", litigation: "C", lobbying: "C", logo: null },
-            { name: "Kellogg, Hansen, Todd, Figel & Frederick", rank: 81, grade: "F", transaction: "B", litigation: "F", lobbying: "B", logo: null },
-            { name: "Kilpatrick Townsend & Stockton", rank: 99, grade: "C", transaction: "B", litigation: "B", lobbying: "C", logo: null },
-            { name: "Mintz Levin", rank: 74, grade: "A", transaction: "B", litigation: "B", lobbying: "B", logo: null },
-            { name: "Munger, Tolles & Olson", rank: 43, grade: "F", transaction: "B", litigation: "F", lobbying: "B", logo: null },
-            { name: "Polsinelli", rank: 89, grade: "A", transaction: "A", litigation: "B", lobbying: "B", logo: null },
-            { name: "Proskauer Rose", rank: 30, grade: "A", transaction: "B", litigation: "B", lobbying: "B", logo: null },
-            { name: "Quinn Emanuel Urquhart & Sullivan", rank: 12, grade: "D", transaction: "B", litigation: "D", lobbying: "B", logo: null },
-            { name: "Schulte Roth & Zabel", rank: 88, grade: "A", transaction: "B", litigation: "B", lobbying: "B", logo: null },
-            { name: "Susman Godfrey", rank: 28, grade: "F", transaction: "B", litigation: "F", lobbying: "B", logo: null },
-            { name: "Venable", rank: 67, grade: "F", transaction: "B", litigation: "F", lobbying: "D", logo: null },
-            { name: "Williams & Connolly", rank: 19, grade: "D", transaction: "B", litigation: "D", lobbying: "B", logo: null },
-            { name: "Arent Fox", rank: 79, grade: "D", transaction: "B", litigation: "B", lobbying: "D", logo: null },
-            { name: "Bryan Cave Leighton Paisner", rank: 94, grade: "B", transaction: "A", litigation: "B", lobbying: "B", logo: null },
-            { name: "Cadwalader, Wickersham & Taft", rank: 53, grade: "B", transaction: "B", litigation: "B", lobbying: "B", logo: null },
-            { name: "Cooley", rank: 24, grade: "A", transaction: "A", litigation: "B", lobbying: "B", logo: "https://cdn.cookielaw.org/logos/5933c992-70de-4529-bbe4-2823cdc10b72/e25d1509-fd8f-458f-8982-7f7ac1752405/6681d431-78de-4b3c-b246-6712d6d77bb5/cooley-logo-red-web.png" },
-            { name: "Duane Morris", rank: 97, grade: "D", transaction: "B", litigation: "D", lobbying: "D", logo: null },
-            { name: "Fox Rothschild", rank: 75, grade: "B", transaction: "B", litigation: "B", lobbying: "B", logo: null },
-            { name: "Ropes & Gray", rank: 20, grade: "A", transaction: "A", litigation: "B", lobbying: "B", logo: "https://www.ropesgray.com/-/media/images/ropesgrayllplogo-3.svg?h=66&iar=0&w=257&hash=0E44F85D345AD2CD435AA78B221B1833" },
-            { name: "Seyfarth Shaw", rank: 86, grade: "B", transaction: "B", litigation: "B", lobbying: "B", logo: null },
-            { name: "Sheppard, Mullin, Richter & Hampton", rank: 69, grade: "C", transaction: "A", litigation: "C", lobbying: "B", logo: null },
-            { name: "Alston & Bird", rank: 58, grade: "D", transaction: "C", litigation: "D", lobbying: "D", logo: null },
-            { name: "BakerHostetler", rank: 64, grade: "D", transaction: "C", litigation: "D", lobbying: "D", logo: null },
-            { name: "Ballard Spahr", rank: 92, grade: "C", transaction: "C", litigation: "C", lobbying: "A", logo: null },
-            { name: "Foley & Lardner", rank: 68, grade: "D", transaction: "C", litigation: "B", lobbying: "D", logo: null },
-            { name: "Katten Muchin Rosenman", rank: 77, grade: "C", transaction: "C", litigation: "B", lobbying: "B", logo: null },
-            { name: "Kramer Levin Naftalis & Frankel", rank: 90, grade: "C", transaction: "C", litigation: "B", lobbying: "B", logo: null },
-            { name: "Nixon Peabody", rank: 72, grade: "D", transaction: "C", litigation: "D", lobbying: "B", logo: null },
-            { name: "WilmerHale", rank: 26, grade: "D", transaction: "C", litigation: "D", lobbying: "D", logo: null },
-            { name: "Wilson Sonsini Goodrich & Rosati", rank: 36, grade: "C", transaction: "C", litigation: "B", lobbying: "B", logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYqjPvZsCjfvgK5--YJDigx5qO9pXKh1W7zg&s" },
-            { name: "Blank Rome", rank: 96, grade: "D", transaction: "C", litigation: "C", lobbying: "D", logo: null },
-            { name: "Fried, Frank, Harris, Shriver & Jacobson", rank: 46, grade: "D", transaction: "D", litigation: "B", lobbying: "B", logo: null },
-            { name: "Goodwin Procter", rank: 32, grade: "F", transaction: "C", litigation: "F", lobbying: "B", logo: null },
-            { name: "McDermott Will & Emery", rank: 45, grade: "C", transaction: "C", litigation: "C", lobbying: "B", logo: null },
-            { name: "Steptoe & Johnson", rank: 73, grade: "D", transaction: "C", litigation: "D", lobbying: "D", logo: null },
-            { name: "Morrison & Foerster", rank: 22, grade: "D", transaction: "D", litigation: "B", lobbying: "B", logo: null },
-            { name: "Perkins Coie", rank: 31, grade: "D", transaction: "D", litigation: "D", lobbying: "D", logo: null },
-            { name: "Pillsbury Winthrop Shaw Pittman", rank: 60, grade: "D", transaction: "C", litigation: "D", lobbying: "D", logo: null },
-            { name: "Cahill Gordon & Reindel", rank: 66, grade: "D", transaction: "D", litigation: "B", lobbying: "B", logo: null },
-            { name: "Covington & Burling", rank: 15, grade: "F", transaction: "D", litigation: "F", lobbying: "D", logo: null },
-            { name: "Debevoise & Plimpton", rank: 21, grade: "D", transaction: "D", litigation: "B", lobbying: "B", logo: null },
-            { name: "K & L Gates", rank: 49, grade: "F", transaction: "D", litigation: "F", lobbying: "F", logo: null },
-            { name: "Reed Smith", rank: 62, grade: "D", transaction: "D", litigation: "D", lobbying: "B", logo: null },
-            { name: "Greenberg Traurig", rank: 54, grade: "F", transaction: "D", litigation: "F", lobbying: "D", logo: null },
-            { name: "Cravath, Swaine & Moore", rank: 1, grade: "D", transaction: "D", litigation: "D", lobbying: "B", logo: null },
-            { name: "O'Melveny & Myers", rank: 25, grade: "F", transaction: "D", litigation: "F", lobbying: "B", logo: null },
-            { name: "Squire Patton Boggs", rank: 76, grade: "F", transaction: "D", litigation: "F", lobbying: "D", logo: null },
-            { name: "McGuireWoods", rank: 71, grade: "F", transaction: "D", litigation: "F", lobbying: "D", logo: null },
-            { name: "Willkie Farr & Gallagher", rank: 35, grade: "D", transaction: "D", litigation: "B", lobbying: "B", logo: null },
-            { name: "Haynes and Boone", rank: 87, grade: "D", transaction: "D", litigation: "D", lobbying: "B", logo: null },
-            { name: "Troutman Pepper Hamilton Sanders", rank: 80, grade: "D", transaction: "D", litigation: "D", lobbying: "A", logo: null },
-            { name: "Wachtell, Lipton, Rosen & Katz", rank: 2, grade: "D", transaction: "D", litigation: "D", lobbying: "B", logo: null },
-            { name: "Holland & Knight", rank: 48, grade: "F", transaction: "D", litigation: "F", lobbying: "F", logo: null },
-            { name: "Locke Lord", rank: 83, grade: "D", transaction: "D", litigation: "B", lobbying: "B", logo: null },
-            { name: "Winston & Strawn", rank: 38, grade: "D", transaction: "D", litigation: "C", lobbying: "B", logo: null },
-            { name: "Paul Weiss Rifkind Wharton & Garrison", rank: 8, grade: "F", transaction: "D", litigation: "F", lobbying: "B", logo: null },
-            { name: "Weil, Gotshal & Manges", rank: 14, grade: "D", transaction: "D", litigation: "D", lobbying: "B", logo: null },
-            { name: "Hogan Lovells", rank: 27, grade: "F", transaction: "D", litigation: "F", lobbying: "D", logo: null },
-            { name: "Dentons", rank: 61, grade: "D", transaction: "D", litigation: "C", lobbying: "D", logo: null },
-            { name: "Jones Day", rank: 23, grade: "F", transaction: "D", litigation: "F", lobbying: "B", logo: null },
-            { name: "Orrick, Herrington & Sutcliffe", rank: 40, grade: "F", transaction: "D", litigation: "F", lobbying: "B", logo: null },
-            { name: "Morgan, Lewis & Bockius", rank: 34, grade: "F", transaction: "D", litigation: "F", lobbying: "B", logo: null },
-            { name: "Cleary Gottlieb Steen & Hamilton", rank: 16, grade: "D", transaction: "D", litigation: "C", lobbying: "B", logo: null },
-            { name: "Sullivan & Cromwell", rank: 5, grade: "D", transaction: "D", litigation: "D", lobbying: "B", logo: null },
-            { name: "King & Spalding", rank: 37, grade: "F", transaction: "D", litigation: "F", lobbying: "C", logo: null },
-            { name: "DLA Piper", rank: 39, grade: "D", transaction: "D", litigation: "C", lobbying: "D", logo: null },
-            { name: "Mayer Brown", rank: 44, grade: "D", transaction: "D", litigation: "D", lobbying: "D", logo: null },
-            { name: "Paul Hastings", rank: 18, grade: "D", transaction: "D", litigation: "D", lobbying: "B", logo: null },
-            { name: "Baker McKenzie", rank: 41, grade: "D", transaction: "D", litigation: "B", lobbying: "B", logo: null },
-            { name: "Freshfields Bruckhaus Deringer", rank: 57, grade: "F", transaction: "F", litigation: "B", lobbying: "B", logo: null },
-            { name: "Akin Gump Strauss Hauer & Feld", rank: 29, grade: "F", transaction: "F", litigation: "B", lobbying: "F", logo: null },
-            { name: "Davis Polk & Wardwell", rank: 7, grade: "F", transaction: "F", litigation: "B", lobbying: "B", logo: null },
-            { name: "Baker Botts", rank: 51, grade: "F", transaction: "F", litigation: "F", lobbying: "B", logo: null },
-            { name: "Skadden, Arps, Slate, Meagher & Flom", rank: 3, grade: "F", transaction: "F", litigation: "B", lobbying: "B", logo: null },
-            { name: "Sidley Austin", rank: 11, grade: "F", transaction: "F", litigation: "F", lobbying: "A", logo: null },
-            { name: "Gibson, Dunn & Crutcher", rank: 10, grade: "F", transaction: "F", litigation: "F", lobbying: "C", logo: null },
-            { name: "Hunton Andrews Kurth", rank: 95, grade: "F", transaction: "F", litigation: "F", lobbying: "F", logo: null },
-            { name: "Norton Rose Fulbright", rank: 59, grade: "F", transaction: "F", litigation: "D", lobbying: "C", logo: null },
-            { name: "Clifford Chance", rank: 42, grade: "F", transaction: "F", litigation: "B", lobbying: "B", logo: null },
-            { name: "Simpson Thacher & Bartlett", rank: 9, grade: "F", transaction: "F", litigation: "B", lobbying: "B", logo: null },
-            { name: "Linklaters", rank: 51, grade: "F", transaction: "F", litigation: "B", lobbying: "B", logo: null },
-            { name: "Milbank", rank: 13, grade: "F", transaction: "F", litigation: "B", lobbying: "B", logo: null },
-            { name: "A&O Shearman", rank: 47, grade: "F", transaction: "F", litigation: "B", lobbying: "B", logo: null },
-            { name: "White & Case", rank: 17, grade: "F", transaction: "F", litigation: "D", lobbying: "B", logo: null },
-            { name: "Kirkland & Ellis", rank: 6, grade: "F", transaction: "F", litigation: "D", lobbying: "B", logo: null },
-            { name: "Vinson & Elkins", rank: 55, grade: "F", transaction: "F", litigation: "F", lobbying: "C", logo: null },
-            { name: "Latham & Watkins", rank: 4, grade: "F", transaction: "F", litigation: "F", lobbying: "B", logo: "https://www.lw.com/assets/images/logo/logo-lathamandwatkins.svg" }
-        ];
+        // Google Sheets CSV URL
+        const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSWOJ6eD5ufutrYKS7oiy09dqDdRJCKoxkOioTK7OSWWBWmMdpMlGjnjbuzrkNatA/pub?gid=1883963685&single=true&output=csv';
+
+        // Global firms array
+        let firms = [];
 
         // Grade color mapping
         const gradeColors = {
@@ -1028,38 +946,103 @@
             'F': 'var(--grade-f)'
         };
 
+        // Parse CSV row into firm object
+        function parseRow(row) {
+            // Skip rows without a firm name or slug
+            if (!row['Firm Name'] || !row['Firm Slug']) return null;
+            
+            // Skip the field type description row (row 2)
+            if (row['Vault Rank'] === 'Number (auto-filled)') return null;
+
+            return {
+                rank: parseInt(row['Vault Rank']) || 0,
+                name: row['Firm Name'] || '',
+                slug: row['Firm Slug'] || '',
+                logo: row['Firm Logo'] || null,
+                grade: row['Overall Grade'] || '',
+                transaction: row['Transaction Grade'] || '',
+                litigation: row['Litigation Grade'] || '',
+                lobbying: row['Lobbying Grade'] || '',
+                priorGrade: row['Prior Year Grade (2024)'] || '',
+                transactionRank: parseInt(row['Transaction Rank']) || 0,
+                litigationRank: parseInt(row['Litigation Rank']) || 0,
+                engagementStatus: row['Engagement Status'] || 'No Response'
+            };
+        }
+
+        // Fetch and parse Google Sheets data
+        async function loadFirmData() {
+            try {
+                const response = await fetch(SHEET_URL);
+                const csvText = await response.text();
+                
+                Papa.parse(csvText, {
+                    header: true,
+                    skipEmptyLines: true,
+                    complete: function(results) {
+                        firms = results.data
+                            .map(parseRow)
+                            .filter(firm => firm !== null && firm.name && firm.grade);
+                        
+                        // Hide loading, show content
+                        document.getElementById('loadingState').style.display = 'none';
+                        populateGrids();
+                        initComparison();
+                    },
+                    error: function(error) {
+                        console.error('CSV parse error:', error);
+                        showError();
+                    }
+                });
+            } catch (error) {
+                console.error('Fetch error:', error);
+                showError();
+            }
+        }
+
+        function showError() {
+            document.getElementById('loadingState').innerHTML = `
+                <p style="color: var(--grade-f);">Error loading firm data. Please refresh the page.</p>
+            `;
+        }
+
         // Create a firm card
         function createFirmCard(firm) {
             const logoHtml = firm.logo 
-                ? `<img src="${firm.logo}" alt="${firm.name} logo" class="firm-logo">`
+                ? `<img src="${firm.logo}" alt="${firm.name} logo" class="firm-logo" onerror="this.parentElement.innerHTML='<span>Logo</span>'">`
                 : `<span>Logo</span>`;
             
+            const gradeColor = gradeColors[firm.grade] || 'var(--text-muted)';
+            const transactionColor = gradeColors[firm.transaction] || 'var(--text-muted)';
+            const litigationColor = gradeColors[firm.litigation] || 'var(--text-muted)';
+            const lobbyingColor = gradeColors[firm.lobbying] || 'var(--text-muted)';
+
             return `
-                <div class="firm-card" data-grade="${firm.grade}" data-name="${firm.name.toLowerCase()}" data-firm="${firm.name}">
+                <div class="firm-card" data-grade="${firm.grade}" data-name="${firm.name.toLowerCase()}" data-slug="${firm.slug}" data-firm="${firm.name}">
                     <div class="card-top">
                         <span class="vault-rank">#${firm.rank}</span>
                         <label class="compare-checkbox" title="Add to compare">
                             <input type="checkbox" class="compare-check" data-firm="${firm.name}">
                         </label>
                     </div>
-                    <div class="logo-placeholder">
+                    <div class="logo-placeholder ${firm.logo ? 'has-logo' : ''}">
                         ${logoHtml}
                     </div>
                     <div class="firm-name">${firm.name}</div>
                     <div class="card-grades">
-                        <div class="overall-grade" style="background: ${gradeColors[firm.grade]};">${firm.grade}</div>
+                        <div class="overall-grade" style="background: ${gradeColor};">${firm.grade || '?'}</div>
                         <div class="sub-grades">
                             <div class="sub-grade" title="Transactions">
                                 <span class="sub-grade-icon">🤝</span>
-                                <div class="sub-grade-value" style="background: ${gradeColors[firm.transaction]};">${firm.transaction}</div>
+                                <div class="sub-grade-value" style="background: ${transactionColor};">${firm.transaction || '?'}</div>
                             </div>
                             <div class="sub-grade" title="Litigation">
                                 <span class="sub-grade-icon">⚖️</span>
-                                <div class="sub-grade-value" style="background: ${gradeColors[firm.litigation]};">${firm.litigation}</div>
+                                <div class="sub-grade-value" style="background: ${litigationColor};">${firm.litigation || '?'}</div>
                             </div>
                             <div class="sub-grade" title="Lobbying">
                                 <span class="sub-grade-icon">🏛️</span>
-                                <div class="sub-grade-value" style="background: ${gradeColors[firm.lobbying]};">${firm.lobbying}</div>
+                                <div class="sub-grade-value" style="background: ${lobbyingColor};">${firm.lobbying || '?'}</div>
                             </div>
                         </div>
                     </div>
@@ -1071,9 +1054,15 @@
         function populateGrids() {
             const grades = ['A', 'B', 'C', 'D', 'F'];
             grades.forEach(grade => {
+                const bucket = document.querySelector(`.grade-bucket[data-grade="${grade}"]`);
                 const grid = document.getElementById(`grade-${grade.toLowerCase()}-grid`);
                 const gradeFirms = firms.filter(f => f.grade === grade).sort((a, b) => a.rank - b.rank);
-                grid.innerHTML = gradeFirms.map(createFirmCard).join('');
+                
+                if (gradeFirms.length > 0) {
+                    grid.innerHTML = gradeFirms.map(createFirmCard).join('');
+                    bucket.querySelector('.count').textContent = gradeFirms.length;
+                    bucket.classList.remove('hidden');
+                }
             });
         }
 
@@ -1122,7 +1111,7 @@
 
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
-            populateGrids();
+            loadFirmData();
             
             // Search listener
             document.getElementById('firmSearch').addEventListener('input', filterFirms);
@@ -1132,18 +1121,16 @@
                 cb.addEventListener('change', filterFirms);
             });
             
-                // Card click to go to profile
-                document.addEventListener('click', (e) => {
-                    const card = e.target.closest('.firm-card');
-                    if (card && !e.target.closest('.compare-checkbox')) {
-                        const firmName = card.dataset.firm;
-                        const slug = firmName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/, '');
+            // Card click to go to profile
+            document.addEventListener('click', (e) => {
+                const card = e.target.closest('.firm-card');
+                if (card && !e.target.closest('.compare-checkbox')) {
+                    const slug = card.dataset.slug;
+                    if (slug) {
                         window.location.href = '/' + slug;
                     }
-                });    
-
-            // Comparison functionality
-            initComparison();
+                }
+            });
         });
 
         // Comparison state
@@ -1294,7 +1281,7 @@
                             ${selectedFirmData.map(firm => {
                                 const value = firm[row.key];
                                 if (row.isGrade) {
-                                    return `<td class="grade-cell" style="color: ${gradeColors[value]}">${value}</td>`;
+                                    return `<td class="grade-cell" style="color: ${gradeColors[value] || 'inherit'}">${value || '?'}</td>`;
                                 } else if (row.format) {
                                     return `<td>${row.format(value)}</td>`;
                                 } else {

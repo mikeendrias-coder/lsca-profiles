@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Firm Profile - LSCA</title>
     <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <style>
         :root {
             --lsca-green: #4CAF50;
@@ -82,6 +83,27 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 2rem 4rem;
+        }
+
+        /* Loading State */
+        .loading-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-muted);
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border);
+            border-top-color: var(--lsca-green);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
         .profile-header {
@@ -273,19 +295,6 @@
         .stat-value.renewable { color: var(--renewable); }
         .stat-subtext { font-size: 0.8rem; color: var(--text-muted); }
 
-        .stat-bar {
-            height: 8px;
-            background: var(--border);
-            border-radius: 4px;
-            margin-top: 0.75rem;
-            overflow: hidden;
-            display: flex;
-        }
-
-        .stat-bar-fill { height: 100%; }
-        .stat-bar-fill.fossil { background: var(--fossil-fuel); }
-        .stat-bar-fill.renewable { background: var(--renewable); }
-
         .content-section {
             margin: 2rem 0;
             padding: 1.5rem;
@@ -335,6 +344,15 @@
 
         .not-found h1 { color: var(--lsca-green-dark); margin-bottom: 1rem; }
 
+        .data-pending {
+            color: var(--text-muted);
+            font-style: italic;
+            padding: 1rem;
+            background: var(--bg-light);
+            border-radius: 8px;
+            text-align: center;
+        }
+
         @media (max-width: 768px) {
             .profile-header { grid-template-columns: 1fr; }
             .grade-display { flex-direction: column; align-items: flex-start; }
@@ -357,7 +375,10 @@
     <a href="/" class="back-link">← Back to All Firms</a>
 
     <div class="profile-container" id="profileContainer">
-        <!-- Populated by JavaScript -->
+        <div class="loading-state" id="loadingState">
+            <div class="loading-spinner"></div>
+            <p>Loading firm profile...</p>
+        </div>
     </div>
 
     <footer class="site-footer">
@@ -366,102 +387,8 @@
     </footer>
 
     <script>
-        // Firm data - will be replaced with Google Sheets fetch later
-        const firms = {
-            "foley-hoag": {
-                name: "Foley Hoag LLP",
-                slug: "foley-hoag",
-                rank: 98,
-                grade: "A",
-                transaction: "A",
-                litigation: "A",
-                lobbying: "A",
-                priorGrade: "A",
-                engagement: "Submitted Statement",
-                takeaway: "A standout among A-rated firms, Foley Hoag is the first to crack the top 5 in mitigating litigation work.",
-                ffTransactionValue: "$0",
-                ffTransactionCount: 0,
-                renewableTransactionValue: "$509M",
-                renewableTransactionCount: 6,
-                exacerbatingPoints: 0,
-                exacerbatingCount: 0,
-                mitigatingPoints: 10,
-                mitigatingCount: 3,
-                new2024Exacerbating: 0,
-                ffLobbyingValue: "$0",
-                ffLobbyingCount: 0,
-                renewableLobbyingValue: "$5K",
-                renewableLobbyingCount: 1,
-                transactionRank: 78,
-                litigationRank: 64,
-                firmStatement: "Foley Hoag established an energy and climate practice focused on the clean energy transition in 2005, long before such work was common in the legal industry. Today, our Energy & Climate practice encompasses more than 60 lawyers across our offices, advising on renewable energy development, climate policy, carbon markets, environmental justice, and sustainable finance. We represent developers, investors, utilities, municipalities, and nonprofits working to accelerate decarbonization. Foley Hoag has earned national recognition for our climate work, including from Chambers USA and The Legal 500. We are proud to have maintained an 'A' rating from Law Students for Climate Accountability from 2023 through 2025.",
-                statementAuthor: "Shai Fogelson, Energy & Climate Marketing Lead",
-                analysis: "Foley Hoag stands out as a model for how a law firm can thrive without fossil fuel work. With zero fossil fuel transactions, zero exacerbating litigation, and zero fossil fuel lobbying over the five-year period, they've achieved a perfect record across all three categories.\n\nWhat makes Foley Hoag particularly notable is their proactive engagement: they're one of the few firms to submit a statement to LSCA, demonstrating transparency about their climate commitments. Their ranking of 5th in mitigating litigation shows that their climate work goes beyond simply avoiding harm; they're actively using legal expertise to support climate solutions.",
-                guidance: "Foley Hoag represents one of the clearest choices for climate-conscious law students. If you want to work on renewable energy, climate policy, or environmental justice, this firm offers substantial opportunities over 60 lawyers work in their Energy & Climate practice.\n\nYou're unlikely to be asked to work on fossil fuel matters here. The firm has made a strategic decision to focus on the energy transition, and associates report that this focus permeates the culture."
-            },
-            "wilson-sonsini": {
-                name: "Wilson Sonsini Goodrich & Rosati",
-                slug: "wilson-sonsini",
-                rank: 36,
-                grade: "C",
-                transaction: "C",
-                litigation: "B",
-                lobbying: "B",
-                priorGrade: "A",
-                engagement: "No Response",
-                takeaway: "A cautionary tale: Wilson Sonsini dropped from A to C in a single year, showing that grades aren't permanent.",
-                ffTransactionValue: "$59M",
-                ffTransactionCount: 2,
-                renewableTransactionValue: "$5.68B",
-                renewableTransactionCount: 51,
-                exacerbatingPoints: 2,
-                exacerbatingCount: 1,
-                mitigatingPoints: 0,
-                mitigatingCount: 0,
-                new2024Exacerbating: 0,
-                ffLobbyingValue: "$0",
-                ffLobbyingCount: 0,
-                renewableLobbyingValue: "$0",
-                renewableLobbyingCount: 0,
-                transactionRank: 74,
-                litigationRank: 59,
-                firmStatement: null,
-                statementAuthor: null,
-                analysis: "Wilson Sonsini's drop from A to C is striking and illustrates how LSCA's methodology works. Looking at the raw numbers, the firm's renewable-to-fossil-fuel ratio is actually impressive: $5.68 billion in renewable transactions versus $59 million in fossil fuel work (a 96:1 ratio in renewables' favor).\n\nSo why the drop? LSCA's methodology includes a safe harbor that allows for one piece of fossil fuel work before penalties apply. Wilson Sonsini had two fossil fuel transactions, pushing them past this threshold.",
-                guidance: "Wilson Sonsini is a mixed picture. The firm does substantial renewable energy work 51 deals worth $5.68 billion over five years which is among the highest in the Vault 100. Their tech-focused practice means many associates work on clean tech and sustainability ventures.\n\nHowever, the firm isn't fossil-fuel-free. If you're considering Wilson Sonsini, you may want to ask during interviews about how work is assigned and whether you can express preferences about client types."
-            },
-            "latham-watkins": {
-                name: "Latham & Watkins",
-                slug: "latham-watkins",
-                rank: 4,
-                grade: "F",
-                transaction: "F",
-                litigation: "F",
-                lobbying: "B",
-                priorGrade: "F",
-                engagement: "No Response",
-                takeaway: "One of the most prestigious firms in the world and one of the worst for the climate. Latham has earned an F every year LSCA has published a scorecard.",
-                ffTransactionValue: "$184.1B",
-                ffTransactionCount: 340,
-                renewableTransactionValue: "$70.5B",
-                renewableTransactionCount: 344,
-                exacerbatingPoints: 97,
-                exacerbatingCount: 26,
-                mitigatingPoints: 23,
-                mitigatingCount: 8,
-                new2024Exacerbating: 4,
-                ffLobbyingValue: "$0",
-                ffLobbyingCount: 0,
-                renewableLobbyingValue: "$0",
-                renewableLobbyingCount: 0,
-                transactionRank: 2,
-                litigationRank: 6,
-                firmStatement: null,
-                statementAuthor: null,
-                analysis: "Latham & Watkins is one of the largest, most prestigious law firms in the world and one of the most significant enablers of the fossil fuel industry. Their numbers are staggering: $184.1 billion in fossil fuel transactions over five years, ranking them 2nd worst among all Vault 100 firms in this category.\n\nIn litigation, the picture is similarly concerning. With 97 exacerbating points from 26 representations, they rank 6th worst. The 2024 activity flag is particularly concerning: Latham took on 4 new fossil fuel litigation cases this year.",
-                guidance: "This is a firm where you are likely to be asked to work on fossil fuel matters. With 340 fossil fuel transactions and 26 exacerbating litigation representations over five years, this work is a significant part of Latham's practice.\n\nLatham does have a substantial renewable energy practice, and some associates may be able to focus their careers there. However, the firm's overall trajectory shows no sign of reducing fossil fuel work."
-            }
-        };
+        // Google Sheets CSV URL
+        const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSWOJ6eD5ufutrYKS7oiy09dqDdRJCKoxkOioTK7OSWWBWmMdpMlGjnjbuzrkNatA/pub?gid=1883963685&single=true&output=csv';
 
         const gradeColors = {
             'A': 'var(--grade-a)',
@@ -477,90 +404,196 @@
             return slug;
         }
 
+        function formatCurrency(value) {
+            if (!value || value === '0' || value === 0) return '$0';
+            const num = parseFloat(value);
+            if (isNaN(num)) return value;
+            if (num >= 1e9) return '$' + (num / 1e9).toFixed(1) + 'B';
+            if (num >= 1e6) return '$' + (num / 1e6).toFixed(1) + 'M';
+            if (num >= 1e3) return '$' + (num / 1e3).toFixed(0) + 'K';
+            return '$' + num.toFixed(0);
+        }
+
+        function parseRow(row) {
+            if (!row['Firm Name'] || !row['Firm Slug']) return null;
+            if (row['Vault Rank'] === 'Number (auto-filled)') return null;
+
+            return {
+                slug: row['Firm Slug'] || '',
+                name: row['Firm Name'] || '',
+                rank: parseInt(row['Vault Rank']) || 0,
+                logo: row['Firm Logo'] || null,
+                grade: row['Overall Grade'] || '',
+                transaction: row['Transaction Grade'] || '',
+                litigation: row['Litigation Grade'] || '',
+                lobbying: row['Lobbying Grade'] || '',
+                priorGrade: row['Prior Year Grade (2024)'] || '',
+                transactionRank: parseInt(row['Transaction Rank']) || 0,
+                transactionRankDesc: row['Transaction Rank Descriptor'] || '',
+                litigationRank: parseInt(row['Litigation Rank']) || 0,
+                litigationRankDesc: row['Litigation Rank Descriptor'] || '',
+                ffTransactionValue: row['FF Transaction Value'] || '0',
+                ffTransactionCount: parseInt(row['FF Transaction Count']) || 0,
+                renewableTransactionValue: row['Renewable Transaction Value'] || '0',
+                renewableTransactionCount: parseInt(row['Renewable Transaction Count']) || 0,
+                exacerbatingPoints: parseInt(row['Exacerbating Points']) || 0,
+                exacerbatingCount: parseInt(row['Exacerbating Case Count']) || 0,
+                mitigatingPoints: parseInt(row['Mitigating Points']) || 0,
+                mitigatingCount: parseInt(row['Mitigating Case Count']) || 0,
+                new2024Exacerbating: parseInt(row['New 2024 Exacerbating']) || 0,
+                new2024Mitigating: parseInt(row['New 2024 Mitigating']) || 0,
+                ffLobbyingValue: row['FF Lobbying Compensation'] || '0',
+                ffLobbyingCount: parseInt(row['FF Lobbying Client Count']) || 0,
+                renewableLobbyingValue: row['Renewable Lobbying Comp'] || '0',
+                renewableLobbyingCount: parseInt(row['Renewable Lobbying Clients']) || 0,
+                engagementStatus: row['Engagement Status'] || 'No Response',
+                firmStatement: row['Firm Statement Text'] || null,
+                statementAuthor: row['Statement Author Name'] || '',
+                statementTitle: row['Statement Author Title'] || '',
+                takeaway: row['Takeaway Line'] || '',
+                ratioNote: row['Ratio Note'] || '',
+                analysis: row['LSCA Analysis'] || '',
+                guidance: row['Guidance Summary'] || '',
+                guidanceBottomLine: row['Guidance Bottom Line'] || '',
+                interviewQ1: row['Interview Question 1'] || '',
+                interviewQ2: row['Interview Question 2'] || '',
+                interviewQ3: row['Interview Question 3'] || '',
+                interviewQ4: row['Interview Question 4'] || ''
+            };
+        }
+
+        async function loadFirmData() {
+            const slug = getSlugFromURL();
+            
+            if (!slug) {
+                window.location.href = '/';
+                return;
+            }
+
+            try {
+                const response = await fetch(SHEET_URL);
+                const csvText = await response.text();
+                
+                Papa.parse(csvText, {
+                    header: true,
+                    skipEmptyLines: true,
+                    complete: function(results) {
+                        const firms = results.data
+                            .map(parseRow)
+                            .filter(firm => firm !== null);
+                        
+                        const firm = firms.find(f => f.slug === slug);
+                        
+                        if (firm) {
+                            renderProfile(firm);
+                        } else {
+                            renderNotFound(slug);
+                        }
+                    },
+                    error: function(error) {
+                        console.error('CSV parse error:', error);
+                        renderError();
+                    }
+                });
+            } catch (error) {
+                console.error('Fetch error:', error);
+                renderError();
+            }
+        }
+
+        function renderError() {
+            const container = document.getElementById('profileContainer');
+            container.innerHTML = `
+                <div class="not-found">
+                    <h1>Error Loading Profile</h1>
+                    <p>There was an error loading the firm data. Please refresh the page or try again later.</p>
+                    <p><a href="/" style="color: var(--lsca-green);">← Back to all firms</a></p>
+                </div>
+            `;
+        }
+
         function renderProfile(firm) {
             const container = document.getElementById('profileContainer');
             document.title = `${firm.name} - LSCA Climate Profile`;
 
-            const activityFlag = firm.new2024Exacerbating === 0
-                ? `<div class="activity-flag positive"><span class="activity-icon">✓</span><span class="activity-text">No new fossil fuel litigation in 2024</span></div>`
-                : `<div class="activity-flag negative"><span class="activity-icon">⚠</span><span class="activity-text">Took on ${firm.new2024Exacerbating} new fossil fuel cases in 2024</span></div>`;
+            const gradeColor = gradeColors[firm.grade] || 'var(--text-muted)';
+            const transactionColor = gradeColors[firm.transaction] || 'var(--text-muted)';
+            const litigationColor = gradeColors[firm.litigation] || 'var(--text-muted)';
+            const lobbyingColor = gradeColors[firm.lobbying] || 'var(--text-muted)';
+            const priorGradeColor = gradeColors[firm.priorGrade] || 'var(--text-muted)';
 
-            const firmStatementSection = firm.firmStatement
-                ? `<blockquote style="border-left: 4px solid var(--lsca-green); padding-left: 1.5rem; font-style: italic;">
-                    <p>${firm.firmStatement}</p>
-                    <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 1rem; font-style: normal;">— ${firm.statementAuthor}</p>
-                   </blockquote>`
-                : `<p style="color: var(--text-muted); font-style: italic;">${firm.name} has not submitted a statement to LSCA. We've reached out and await their response.</p>`;
+            // Activity flag
+            let activityFlag = '';
+            if (firm.new2024Exacerbating === 0) {
+                activityFlag = `<div class="activity-flag positive"><span class="activity-icon">✓</span><span class="activity-text">No new fossil fuel litigation in 2024</span></div>`;
+            } else if (firm.new2024Exacerbating > 0) {
+                activityFlag = `<div class="activity-flag negative"><span class="activity-icon">⚠</span><span class="activity-text">Took on ${firm.new2024Exacerbating} new fossil fuel case${firm.new2024Exacerbating > 1 ? 's' : ''} in 2024</span></div>`;
+            }
 
-            const trajectoryArrow = firm.grade === firm.priorGrade ? '→' : (firm.grade < firm.priorGrade ? '↑' : '↓');
-            const trajectoryClass = firm.grade === firm.priorGrade ? '' : (firm.grade < firm.priorGrade ? 'style="color: var(--grade-a)"' : 'style="color: var(--grade-f)"');
+            // Firm statement section
+            let firmStatementSection;
+            if (firm.firmStatement) {
+                const authorLine = firm.statementAuthor 
+                    ? `<p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 1rem; font-style: normal;">— ${firm.statementAuthor}${firm.statementTitle ? ', ' + firm.statementTitle : ''}</p>`
+                    : '';
+                firmStatementSection = `
+                    <blockquote style="border-left: 4px solid var(--lsca-green); padding-left: 1.5rem; font-style: italic;">
+                        <p>${firm.firmStatement}</p>
+                        ${authorLine}
+                    </blockquote>`;
+            } else {
+                firmStatementSection = `<p class="data-pending">${firm.name} has not submitted a statement to LSCA. We've reached out and await their response.</p>`;
+            }
 
+            // Grade trajectory
+            let trajectoryArrow = '→';
+            let trajectoryClass = '';
+            if (firm.priorGrade && firm.grade !== firm.priorGrade) {
+                if (firm.grade < firm.priorGrade) {
+                    trajectoryArrow = '↑';
+                    trajectoryClass = 'style="color: var(--grade-a)"';
+                } else {
+                    trajectoryArrow = '↓';
+                    trajectoryClass = 'style="color: var(--grade-f)"';
+                }
+            }
+
+            // Guidance icon
             const guidanceIcon = ['A', 'B'].includes(firm.grade) ? '💡' : '⚠️';
 
-            container.innerHTML = `
-                <div class="profile-header">
-                    <div class="profile-main">
-                        <h2 class="firm-name">
-                            ${firm.name}
-                            <span class="vault-rank">Vault #${firm.rank}</span>
-                        </h2>
-                        <div class="grade-display">
-                            <div class="main-grade">
-                                <span class="main-grade-label">Climate Grade</span>
-                                <span class="main-grade-value" style="background: ${gradeColors[firm.grade]};">${firm.grade}</span>
-                            </div>
-                            <div class="sub-grades">
-                                <div class="sub-grade">
-                                    <span class="sub-grade-label">Transactions</span>
-                                    <span class="sub-grade-value" style="color: ${gradeColors[firm.transaction]};">${firm.transaction}</span>
-                                </div>
-                                <div class="sub-grade">
-                                    <span class="sub-grade-label">Litigation</span>
-                                    <span class="sub-grade-value" style="color: ${gradeColors[firm.litigation]};">${firm.litigation}</span>
-                                </div>
-                                <div class="sub-grade">
-                                    <span class="sub-grade-label">Lobbying</span>
-                                    <span class="sub-grade-value" style="color: ${gradeColors[firm.lobbying]};">${firm.lobbying}</span>
-                                </div>
-                            </div>
-                        </div>
-                        <p class="quote-intro">"${firm.takeaway}"</p>
-                    </div>
-                    <aside class="profile-sidebar">
-                        <h3 class="sidebar-title">Firm Facts</h3>
-                        <div class="sidebar-item">
-                            <span class="sidebar-label">Vault Rank</span>
-                            <span class="sidebar-value">#${firm.rank}</span>
-                        </div>
-                        <div class="sidebar-item">
-                            <span class="sidebar-label">Climate Grade</span>
-                            <span class="sidebar-value" style="color: ${gradeColors[firm.grade]};">${firm.grade}</span>
-                        </div>
-                        <div class="sidebar-item">
-                            <span class="sidebar-label">Grade Trajectory</span>
-                            <span class="sidebar-value">
-                                <span style="color: ${gradeColors[firm.priorGrade]}">${firm.priorGrade}</span>
-                                <span ${trajectoryClass}>${trajectoryArrow}</span>
-                                <span style="color: ${gradeColors[firm.grade]}">${firm.grade}</span>
-                            </span>
-                        </div>
-                        <div class="sidebar-item">
-                            <span class="sidebar-label">Engagement</span>
-                            <span class="engagement-badge ${firm.engagement === 'Submitted Statement' ? 'submitted' : 'no-response'}">${firm.engagement}</span>
-                        </div>
-                        <div class="sidebar-item">
-                            <span class="sidebar-label">Transaction Rank</span>
-                            <span class="sidebar-value">#${firm.transactionRank}</span>
-                        </div>
-                        <div class="sidebar-item">
-                            <span class="sidebar-label">Litigation Rank</span>
-                            <span class="sidebar-value">#${firm.litigationRank}</span>
-                        </div>
-                    </aside>
-                </div>
+            // Analysis section
+            let analysisSection;
+            if (firm.analysis) {
+                analysisSection = firm.analysis.split('\n\n').map(p => `<p>${p}</p>`).join('');
+            } else {
+                analysisSection = `<p class="data-pending">Detailed analysis coming soon.</p>`;
+            }
 
-                ${activityFlag}
+            // Guidance section
+            let guidanceSection;
+            if (firm.guidance || firm.guidanceBottomLine) {
+                guidanceSection = '';
+                if (firm.guidance) {
+                    guidanceSection += firm.guidance.split('\n\n').map(p => `<p>${p}</p>`).join('');
+                }
+                if (firm.guidanceBottomLine) {
+                    guidanceSection += `<p><strong>${firm.guidanceBottomLine}</strong></p>`;
+                }
+            } else {
+                guidanceSection = `<p class="data-pending">Student guidance coming soon.</p>`;
+            }
 
+            // Takeaway
+            const takeawaySection = firm.takeaway 
+                ? `<p class="quote-intro">"${firm.takeaway}"</p>`
+                : '';
+
+            // Stats section - only show if we have data
+            const hasStats = firm.ffTransactionCount > 0 || firm.renewableTransactionCount > 0 || 
+                            firm.exacerbatingCount > 0 || firm.mitigatingCount > 0 ||
+                            firm.ffLobbyingCount > 0 || firm.renewableLobbyingCount > 0;
+
+            const statsSection = hasStats ? `
                 <section style="margin: 2rem 0;">
                     <h3 class="section-title">By the Numbers (2020-2024)</h3>
                     <div class="stats-grid">
@@ -569,12 +602,12 @@
                             <div class="stat-comparison">
                                 <div class="stat-item">
                                     <div class="stat-label">Fossil Fuel</div>
-                                    <div class="stat-value fossil">${firm.ffTransactionValue}</div>
+                                    <div class="stat-value fossil">${formatCurrency(firm.ffTransactionValue)}</div>
                                     <div class="stat-subtext">${firm.ffTransactionCount} deals</div>
                                 </div>
                                 <div class="stat-item">
                                     <div class="stat-label">Renewable Energy</div>
-                                    <div class="stat-value renewable">${firm.renewableTransactionValue}</div>
+                                    <div class="stat-value renewable">${formatCurrency(firm.renewableTransactionValue)}</div>
                                     <div class="stat-subtext">${firm.renewableTransactionCount} deals</div>
                                 </div>
                             </div>
@@ -599,18 +632,96 @@
                             <div class="stat-comparison">
                                 <div class="stat-item">
                                     <div class="stat-label">Fossil Fuel</div>
-                                    <div class="stat-value fossil">${firm.ffLobbyingValue}</div>
+                                    <div class="stat-value fossil">${formatCurrency(firm.ffLobbyingValue)}</div>
                                     <div class="stat-subtext">${firm.ffLobbyingCount} clients</div>
                                 </div>
                                 <div class="stat-item">
                                     <div class="stat-label">Renewable Energy</div>
-                                    <div class="stat-value renewable">${firm.renewableLobbyingValue}</div>
+                                    <div class="stat-value renewable">${formatCurrency(firm.renewableLobbyingValue)}</div>
                                     <div class="stat-subtext">${firm.renewableLobbyingCount} clients</div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </section>
+            ` : `
+                <section style="margin: 2rem 0;">
+                    <h3 class="section-title">By the Numbers (2020-2024)</h3>
+                    <p class="data-pending">Detailed statistics coming soon.</p>
+                </section>
+            `;
+
+            container.innerHTML = `
+                <div class="profile-header">
+                    <div class="profile-main">
+                        <h2 class="firm-name">
+                            ${firm.name}
+                            <span class="vault-rank">Vault #${firm.rank}</span>
+                        </h2>
+                        <div class="grade-display">
+                            <div class="main-grade">
+                                <span class="main-grade-label">Climate Grade</span>
+                                <span class="main-grade-value" style="background: ${gradeColor};">${firm.grade || '?'}</span>
+                            </div>
+                            <div class="sub-grades">
+                                <div class="sub-grade">
+                                    <span class="sub-grade-label">Transactions</span>
+                                    <span class="sub-grade-value" style="color: ${transactionColor};">${firm.transaction || '?'}</span>
+                                </div>
+                                <div class="sub-grade">
+                                    <span class="sub-grade-label">Litigation</span>
+                                    <span class="sub-grade-value" style="color: ${litigationColor};">${firm.litigation || '?'}</span>
+                                </div>
+                                <div class="sub-grade">
+                                    <span class="sub-grade-label">Lobbying</span>
+                                    <span class="sub-grade-value" style="color: ${lobbyingColor};">${firm.lobbying || '?'}</span>
+                                </div>
+                            </div>
+                        </div>
+                        ${takeawaySection}
+                    </div>
+                    <aside class="profile-sidebar">
+                        <h3 class="sidebar-title">Firm Facts</h3>
+                        <div class="sidebar-item">
+                            <span class="sidebar-label">Vault Rank</span>
+                            <span class="sidebar-value">#${firm.rank}</span>
+                        </div>
+                        <div class="sidebar-item">
+                            <span class="sidebar-label">Climate Grade</span>
+                            <span class="sidebar-value" style="color: ${gradeColor};">${firm.grade || '?'}</span>
+                        </div>
+                        ${firm.priorGrade ? `
+                        <div class="sidebar-item">
+                            <span class="sidebar-label">Grade Trajectory</span>
+                            <span class="sidebar-value">
+                                <span style="color: ${priorGradeColor}">${firm.priorGrade}</span>
+                                <span ${trajectoryClass}>${trajectoryArrow}</span>
+                                <span style="color: ${gradeColor}">${firm.grade}</span>
+                            </span>
+                        </div>
+                        ` : ''}
+                        <div class="sidebar-item">
+                            <span class="sidebar-label">Engagement</span>
+                            <span class="engagement-badge ${firm.engagementStatus === 'Submitted Statement' ? 'submitted' : 'no-response'}">${firm.engagementStatus || 'No Response'}</span>
+                        </div>
+                        ${firm.transactionRank ? `
+                        <div class="sidebar-item">
+                            <span class="sidebar-label">Transaction Rank</span>
+                            <span class="sidebar-value">#${firm.transactionRank}${firm.transactionRankDesc ? ' (' + firm.transactionRankDesc + ')' : ''}</span>
+                        </div>
+                        ` : ''}
+                        ${firm.litigationRank ? `
+                        <div class="sidebar-item">
+                            <span class="sidebar-label">Litigation Rank</span>
+                            <span class="sidebar-value">#${firm.litigationRank}${firm.litigationRankDesc ? ' (' + firm.litigationRankDesc + ')' : ''}</span>
+                        </div>
+                        ` : ''}
+                    </aside>
+                </div>
+
+                ${activityFlag}
+
+                ${statsSection}
 
                 <section class="content-section">
                     <h3 class="section-title">Firm Statement</h3>
@@ -619,7 +730,7 @@
 
                 <section class="content-section">
                     <h3 class="section-title">LSCA Analysis</h3>
-                    ${firm.analysis.split('\n\n').map(p => `<p>${p}</p>`).join('')}
+                    ${analysisSection}
                 </section>
 
                 <section class="content-section student-guidance">
@@ -627,7 +738,7 @@
                         <span class="guidance-icon">${guidanceIcon}</span>
                         If You're Considering This Firm
                     </h3>
-                    ${firm.guidance.split('\n\n').map(p => `<p>${p}</p>`).join('')}
+                    ${guidanceSection}
                 </section>
             `;
         }
@@ -644,17 +755,7 @@
         }
 
         // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            const slug = getSlugFromURL();
-            
-            if (slug && firms[slug]) {
-                renderProfile(firms[slug]);
-            } else if (slug) {
-                renderNotFound(slug);
-            } else {
-                window.location.href = '/';
-            }
-        });
+        document.addEventListener('DOMContentLoaded', loadFirmData);
     </script>
 </body>
 </html>
