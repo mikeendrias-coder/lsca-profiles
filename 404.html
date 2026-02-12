@@ -357,6 +357,25 @@
             .profile-header { grid-template-columns: 1fr; }
             .grade-display { flex-direction: column; align-items: flex-start; }
         }
+        .offices-section {
+    margin: 2rem 0;
+}
+
+.offices-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.office-tag {
+    background: var(--lsca-green-light);
+    color: var(--lsca-green-dark);
+    padding: 0.375rem 0.75rem;
+    border-radius: 100px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
     </style>
 </head>
 <body>
@@ -463,6 +482,7 @@
                 interviewQ2: row['Interview Question 2'] || '',
                 interviewQ3: row['Interview Question 3'] || '',
                 interviewQ4: row['Interview Question 4'] || ''
+                ociOffices: row['OCI Offices'] || ''
             };
         }
 
@@ -533,7 +553,19 @@
             } else if (firm.new2024Exacerbating > 0) {
                 activityFlag = `<div class="activity-flag negative"><span class="activity-icon">⚠</span><span class="activity-text">Took on ${firm.new2024Exacerbating} new fossil fuel case${firm.new2024Exacerbating > 1 ? 's' : ''} in 2024</span></div>`;
             }
-
+            // OCI Offices section
+            let officesSection = '';
+            if (firm.ociOffices) {
+                const officesList = firm.ociOffices.split(',').map(o => o.trim()).filter(o => o);
+                officesSection = `
+                    <section class="offices-section">
+                        <h3 class="section-title">OCI Office Locations</h3>
+                        <div class="offices-grid">
+                            ${officesList.map(office => `<span class="office-tag">${office}</span>`).join('')}
+                        </div>
+                    </section>
+                `;
+            }
             // Firm statement section
             let firmStatementSection;
             if (firm.firmStatement) {
@@ -724,6 +756,8 @@
                 </div>
 
                 ${activityFlag}
+
+                ${officesSection}
 
                 ${statsSection}
 
