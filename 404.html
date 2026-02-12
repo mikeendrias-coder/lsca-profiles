@@ -409,13 +409,14 @@
 
         function formatCurrency(value) {
             if (!value || value === '0' || value === 0) return '$0';
-            const num = parseFloat(value);
+            const cleanValue = String(value).replace(/[$,]/g, '');
+            const num = parseFloat(cleanValue);
             if (isNaN(num)) return value;
             if (num >= 1e9) return '$' + (num / 1e9).toFixed(1) + 'B';
             if (num >= 1e6) return '$' + (num / 1e6).toFixed(1) + 'M';
             if (num >= 1e3) return '$' + (num / 1e3).toFixed(0) + 'K';
             return '$' + num.toFixed(0);
-        }
+}
 
         function parseRow(row) {
             if (!row['Firm Name'] || !row['Firm Slug']) return null;
