@@ -738,6 +738,24 @@
             text-align: left;
             padding: 0.75rem 1rem;
         }
+        .office-filters {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .clear-filters {
+            background: none;
+            border: none;
+            color: var(--lsca-green);
+            font-size: 0.8rem;
+            cursor: pointer;
+            padding: 0.25rem 0;
+            margin-top: 0.5rem;
+        }
+
+        .clear-filters:hover {
+             text-decoration: underline;
+}
     </style>
 </head>
 <body>
@@ -803,8 +821,9 @@
             </div>
 
             <div class="filter-group">
-                <div class="filter-group-title">Office Location</div>
-                <div class="filter-placeholder">Coming soon</div>
+                <div class="filter-group-title">OCI Office Location</div>
+                <div class="office-filters" id="officeFilters"></div>
+                <button class="clear-filters" id="clearOfficeFilters" style="display: none;">Clear office filters</button>
             </div>
 
             <div class="filter-group">
@@ -936,6 +955,7 @@
 
         // Global firms array
         let firms = [];
+        const majorOffices = ['New York', 'Washington DC', 'Los Angeles', 'Chicago', 'San Francisco', 'Boston', 'Houston', 'Dallas', 'Atlanta', 'Miami', 'Silicon Valley', 'Palo Alto'];
 
         // Grade color mapping
         const gradeColors = {
@@ -967,7 +987,9 @@
                 transactionRank: parseInt(row['Transaction Rank']) || 0,
                 litigationRank: parseInt(row['Litigation Rank']) || 0,
                 engagementStatus: row['Engagement Status'] || 'No Response'
+                ociOffices: row['OCI Offices'] || ''
             };
+        
         }
 
         // Fetch and parse Google Sheets data
@@ -984,8 +1006,9 @@
                             .map(parseRow)
                             .filter(firm => firm !== null && firm.name && firm.grade);
                         
-                        // Hide loading, show content
+                       // Hide loading, show content
                         document.getElementById('loadingState').style.display = 'none';
+                        populateOfficeFilters();
                         populateGrids();
                         initComparison();
                     },
@@ -1006,6 +1029,28 @@
             `;
         }
 
+        function populateOfficeFilters() {
+    const container = document.getElementById('officeFilters');
+    container.innerHTML = majorOffices.map(office => `
+        <label class="filter-option">
+            <input type="checkbox" class="office-filter" value="${office}">
+            ${office}
+        </label>
+    `).join('');
+    
+    document.querySelectorAll('.office-filter').forEach(cb => {
+        cb.addEventListener('change', () => {
+            filterFirms();
+            updateClearButton();
+        });
+    });
+}
+
+function updateClearButton() {
+    const anyChecked = document.querySelectorAll('.office-filter:checked').length > 0;
+    document.getElementById('clearOfficeFilters').style.display = anyChecked ? 'block' : 'none';
+}
+
         // Create a firm card
         function createFirmCard(firm) {
             const logoHtml = firm.logo 
@@ -1018,7 +1063,7 @@
             const lobbyingColor = gradeColors[firm.lobbying] || 'var(--text-muted)';
 
             return `
-                <div class="firm-card" data-grade="${firm.grade}" data-name="${firm.name.toLowerCase()}" data-slug="${firm.slug}" data-firm="${firm.name}">
+                <div class="firm-card" data-grade="${firm.grade}" data-name="${firm.name.toLowerCase()}" data-slug="${firm.slug}" data-firm="${firm.name}" data-offices="${firm.ociOffices.toLowerCase()}">
                     <div class="card-top">
                         <span class="vault-rank">#${firm.rank}</span>
                         <label class="compare-checkbox" title="Add to compare">
@@ -1068,46 +1113,52 @@
 
         // Filter and search functionality
         function filterFirms() {
-            const searchTerm = document.getElementById('firmSearch').value.toLowerCase();
-            const checkedGrades = Array.from(document.querySelectorAll('.grade-filter:checked')).map(cb => cb.value);
+    const searchTerm = document.getElementById('firmSearch').value.toLowerCase();
+    const checkedGrades = Array.from(document.querySelectorAll('.grade-filter:checked')).map(cb => cb.value);
+    const checkedOffices = Array.from(document.querySelectorAll('.office-filter:checked')).map(cb => cb.value.toLowerCase());
+    
+    let totalVisible = 0;
+    const grades = ['A', 'B', 'C', 'D', 'F'];
+    
+    grades.forEach(grade => {
+        const bucket = document.querySelector(`.grade-bucket[data-grade="${grade}"]`);
+        const cards = bucket.querySelectorAll('.firm-card');
+        let visibleInBucket = 0;
+        
+        cards.forEach(card => {
+            const cardGrade = card.dataset.grade;
+            const cardName = card.dataset.name;
+            const cardOffices = card.dataset.offices;
             
-            let totalVisible = 0;
-            const grades = ['A', 'B', 'C', 'D', 'F'];
+            const matchesSearch = cardName.includes(searchTerm);
+            const matchesGrade = checkedGrades.includes(cardGrade);
             
-            grades.forEach(grade => {
-                const bucket = document.querySelector(`.grade-bucket[data-grade="${grade}"]`);
-                const cards = bucket.querySelectorAll('.firm-card');
-                let visibleInBucket = 0;
-                
-                cards.forEach(card => {
-                    const cardGrade = card.dataset.grade;
-                    const cardName = card.dataset.name;
-                    const matchesSearch = cardName.includes(searchTerm);
-                    const matchesGrade = checkedGrades.includes(cardGrade);
-                    
-                    if (matchesSearch && matchesGrade) {
-                        card.classList.remove('hidden');
-                        visibleInBucket++;
-                        totalVisible++;
-                    } else {
-                        card.classList.add('hidden');
-                    }
-                });
-                
-                // Update bucket count and visibility
-                const countEl = bucket.querySelector('.count');
-                countEl.textContent = visibleInBucket;
-                
-                if (visibleInBucket === 0 || !checkedGrades.includes(grade)) {
-                    bucket.classList.add('hidden');
-                } else {
-                    bucket.classList.remove('hidden');
-                }
-            });
+            let matchesOffice = true;
+            if (checkedOffices.length > 0) {
+                matchesOffice = checkedOffices.some(office => cardOffices.includes(office));
+            }
             
-            // Show/hide no results message
-            document.getElementById('noResults').style.display = totalVisible === 0 ? 'block' : 'none';
+            if (matchesSearch && matchesGrade && matchesOffice) {
+                card.classList.remove('hidden');
+                visibleInBucket++;
+                totalVisible++;
+            } else {
+                card.classList.add('hidden');
+            }
+        });
+        
+        const countEl = bucket.querySelector('.count');
+        countEl.textContent = visibleInBucket;
+        
+        if (visibleInBucket === 0 || !checkedGrades.includes(grade)) {
+            bucket.classList.add('hidden');
+        } else {
+            bucket.classList.remove('hidden');
         }
+    });
+    
+    document.getElementById('noResults').style.display = totalVisible === 0 ? 'block' : 'none';
+}
 
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
@@ -1130,6 +1181,12 @@
                         window.location.href = '/lsca-profiles/' + slug;
                     }
                 }
+            });
+            // Clear office filters
+            document.getElementById('clearOfficeFilters').addEventListener('click', () => {
+                document.querySelectorAll('.office-filter').forEach(cb => cb.checked = false);
+                filterFirms();
+                updateClearButton();
             });
         });
 
