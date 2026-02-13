@@ -689,11 +689,16 @@
 
             container.innerHTML = `
                 <div class="profile-header">
-                    <div class="profile-main">
-                        <h2 class="firm-name">
-                            ${firm.name}
-                            <span class="vault-rank">Vault #${firm.rank}</span>
-                        </h2>
+                   <div class="profile-main">
+    ${firm.logo ? `
+        <div class="firm-logo-container">
+            <img src="${firm.logo}" alt="${firm.name} logo" class="profile-firm-logo" onerror="this.style.display='none'">
+        </div>
+    ` : ''}
+    <h2 class="firm-name">
+        ${firm.name}
+        <span class="vault-rank">Vault #${firm.rank}</span>
+    </h2>
                         <div class="grade-display">
                             <div class="main-grade">
                                 <span class="main-grade-label">Climate Grade</span>
